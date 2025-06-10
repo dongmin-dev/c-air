@@ -1,0 +1,91 @@
+/* Main container to center the form on the page */
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh; /* Use less than 100vh to account for header */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #ffffff;
+}
+
+/* The box containing the form elements */
+.login-form-container {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  padding: 2rem;
+}
+
+.login-form-container h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+  color: #212529;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 12px;
+  box-sizing: border-box; /* Ensures padding doesn't affect final width */
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+.forgot-password-link {
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  text-align: right;
+}
+
+.forgot-password-link a,
+.signup-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.forgot-password-link a:hover,
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+.login-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #000;
+  border: none;
+  border-radius: 50px; /* Creates the pill shape */
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.login-button:hover {
+  background-color: #333;
+}
+
+.signup-link {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
