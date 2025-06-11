@@ -1,0 +1,67 @@
+.history-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1rem;
+}
+
+.history-card-left {
+  flex-basis: 15%;
+}
+
+.history-card-left .airline-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.history-card-center {
+  flex-grow: 1; /* Takes up the most space */
+  padding: 0 1rem;
+}
+
+.history-card-center .route {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.history-card-center .flight-meta {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+.history-card-right {
+  flex-basis: 25%;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2rem;
+}
+
+.history-card-right .history-amount {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  min-width: 150px; /* To align buttons */
+}
+
+.cancel-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}
