@@ -1,4 +1,5 @@
 .search-form-wrapper {
+  /* Provides some spacing around the form */
   padding: 2rem 0;
 }
 
@@ -6,7 +7,7 @@
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  align-items: center;
+  align-items: center; /* Vertically aligns items in the middle */
   background-color: #fff;
   border-radius: 16px;
   border: 1px solid #dee2e6;
@@ -18,6 +19,10 @@
   padding: 1rem 1.5rem;
   border-right: 1px solid #e9ecef;
   cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex; /* Add flex display */
+  flex-direction: column; /* Stack label and input vertically */
+  align-items: flex-start; /* This is the new line to align items left */
 }
 
 .form-section:hover {
@@ -32,7 +37,6 @@
   margin-bottom: 0.25rem;
 }
 
-/* New style for our inputs and select dropdown */
 .form-input {
   width: 100%;
   border: none;
@@ -40,15 +44,13 @@
   font-size: 1.1rem;
   font-weight: 500;
   color: #212529;
-  font-family: inherit; /* Ensure it uses the page's font */
+  font-family: inherit;
 }
 
-/* Remove the default focus outline */
 .form-input:focus {
   outline: none;
 }
 
-/* Specific styling for the date picker icon */
 input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
