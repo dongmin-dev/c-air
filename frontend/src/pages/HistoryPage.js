@@ -124,7 +124,7 @@ const HistoryPage = () => {
                   <p className="section-date">{date}</p>
                   {items.map((item) => (
                     <HistoryCard
-                      key={`booking-${item.RESERVEDATETIME}`}
+                      key={`booking-${item.FLIGHTNO}-${item.DEPARTUREDATETIME}-${item.SEATCLASS}-${item.RESERVEDATETIME}`}
                       item={item}
                       type="booking"
                     />
@@ -149,7 +149,7 @@ const HistoryPage = () => {
                     <p className="section-date">{date}</p>
                     {items.map((item) => (
                       <HistoryCard
-                        key={`cancel-${item.CANCELDATETIME}`}
+                        key={`cancel-${item.FLIGHTNO}-${item.DEPARTUREDATETIME}-${item.SEATCLASS}-${item.CANCELDATETIME}`}
                         item={item}
                         type="cancellation"
                       />
