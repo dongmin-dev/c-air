@@ -1,0 +1,43 @@
+.history-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.history-header {
+  margin-bottom: 2rem;
+}
+
+/* This is a placeholder style for the date picker from the prototype */
+.date-picker-placeholder {
+  display: inline-flex; /* Use inline-flex to keep it from taking full width */
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.calendar-icon {
+  font-size: 1.2rem;
+}
+
+.history-section {
+  margin-top: 3rem; /* Space between booking and cancellation sections */
+}
+
+.history-section h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.history-section .section-date {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #495057;
+  margin: 0.25rem 0 1.5rem 0;
+}
