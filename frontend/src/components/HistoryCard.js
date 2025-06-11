@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "./HistoryCard.css";
 import koreanAirLogo from "../koreanair.png";
 
-// Helper function to format currency
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat("ko-KR", {
     style: "currency",
@@ -13,13 +12,18 @@ const formatCurrency = (amount) => {
 
 const HistoryCard = ({ item, type }) => {
   const navigate = useNavigate();
+
+  // Determine which date and amount to display based on the type of history
+  const displayDate =
+    type === "booking"
+      ? new Date(item.RESERVEDATETIME)
+      : new Date(item.CANCELDATETIME);
   const displayAmount = type === "booking" ? item.PAYMENT : item.REFUND;
 
   const handleCancelClick = () => {
     navigate("/cancel", { state: { bookingItem: item } });
   };
 
-  // --- New Logic to Check if Flight has Departed ---
   const hasDeparted = new Date(item.DEPARTUREDATETIME) < new Date();
 
   return (
@@ -53,11 +57,15 @@ const HistoryCard = ({ item, type }) => {
           {" · "}
           {item.SEATCLASS}
         </p>
+        {/* This is the new element for the event time */}
+        <p className="event-time">
+          {type === "booking" ? "예약 시간" : "취소 시간"}:{" "}
+          {displayDate.toLocaleString("ko-KR")}
+        </p>
       </div>
       <div className="history-card-right">
         <p className="history-amount">{formatCurrency(displayAmount)}</p>
         {type === "booking" && (
-          // Add the 'disabled' attribute to the button based on the check
           <button
             className="cancel-button"
             onClick={handleCancelClick}
