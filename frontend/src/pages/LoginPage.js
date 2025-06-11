@@ -1,21 +1,23 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import authService from "../services/authService";
 import "./LoginPage.css";
 
-const LoginPage = () => {
+// The component now receives an 'onLogin' prop from App.js
+const LoginPage = ({ onLogin }) => {
   const [cno, setCno] = useState("");
   const [passwd, setPasswd] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Get the navigate function
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
-      await authService.login(cno, passwd);
-      // On successful login, navigate to the search page
+      const response = await authService.login(cno, passwd);
+      // After a successful API call, call the onLogin function from App.js
+      // This updates the state in the top-level component immediately.
+      onLogin(response.user);
       navigate("/search");
     } catch (err) {
       setError("Login failed. Please check your member number and password.");

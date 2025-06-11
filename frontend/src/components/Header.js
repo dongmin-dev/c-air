@@ -1,21 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react"; // No longer need useState or useEffect here
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../CAIR-Logo-blue.png";
 import "./Header.css";
 
-const Header = () => {
-  const [user, setUser] = useState(null);
+// The component now receives 'user' and 'setUser' as props
+const Header = ({ user, setUser }) => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    // Update the state in the top-level App component
     setUser(null);
     navigate("/");
   };
@@ -23,10 +17,9 @@ const Header = () => {
   return (
     <header className="app-header">
       <div className="header-container">
-        {/* This new wrapper groups the logo and nav links together */}
         <div className="header-group-left">
           <div className="header-left">
-            <Link to="/search">
+            <Link to={user ? "/search" : "/"}>
               <img src={logo} alt="C-AIR Logo" className="header-logo" />
             </Link>
           </div>
@@ -42,7 +35,6 @@ const Header = () => {
         <div className="header-right">
           {user ? (
             <div className="user-info">
-              {/* This already displays the full name from the database */}
               <span className="user-name">{user.name}님</span>
               <button onClick={handleLogout} className="logout-button">
                 로그아웃

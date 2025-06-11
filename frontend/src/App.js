@@ -12,13 +12,14 @@ import SearchPage from "./pages/SearchPage";
 import BookingConfirmationPage from "./pages/BookingConfirmationPage";
 import HistoryPage from "./pages/HistoryPage";
 import CancellationPage from "./pages/CancellationPage";
-import ProtectedRoute from "./components/ProtectedRoute"; // Import the new component
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 
 function App() {
+  // The 'user' state is now managed here, in the top-level component.
   const [user, setUser] = useState(null);
 
-  // This effect checks the login status on initial load
+  // This effect checks localStorage on initial load only.
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -29,18 +30,20 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Header />
+        {/* Pass the user state and the setUser function to the Header */}
+        <Header user={user} setUser={setUser} />
         <main>
           <Routes>
-            {/* If a user is logged in, redirect from '/' to '/search'.
-              Otherwise, show the LoginPage.
-            */}
             <Route
               path="/"
-              element={user ? <Navigate to="/search" /> : <LoginPage />}
+              element={
+                user ? (
+                  <Navigate to="/search" />
+                ) : (
+                  <LoginPage onLogin={setUser} />
+                )
+              }
             />
-
-            {/* These routes are now protected */}
             <Route
               path="/search"
               element={
