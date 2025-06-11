@@ -12,13 +12,6 @@
   flex-basis: 15%;
 }
 
-/* Remove the old text style */
-/* .history-card-left .airline-name {
-  font-weight: 600;
-  font-size: 1.1rem;
-} */
-
-/* Add new style for the logo image - this is the same style from FlightCard.css */
 .airline-logo {
   height: 20px;
   width: auto;
@@ -26,7 +19,7 @@
 }
 
 .history-card-center {
-  flex-grow: 1; /* Takes up the most space */
+  flex-grow: 1;
   padding: 0 1rem;
 }
 
@@ -55,7 +48,7 @@
   font-size: 1.25rem;
   font-weight: 700;
   margin: 0;
-  min-width: 150px; /* To align buttons */
+  min-width: 150px;
 }
 
 .cancel-button {
@@ -67,9 +60,16 @@
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
 .cancel-button:hover {
   background-color: #c82333;
+}
+
+/* This is the new rule for the disabled state */
+.cancel-button:disabled {
+  background-color: #6c757d;
+  filter: grayscale(80%); /* Apply a grayscale filter */
+  cursor: not-allowed;
 }
