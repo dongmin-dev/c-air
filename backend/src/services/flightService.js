@@ -3,10 +3,11 @@ const db = require("./databaseService");
 /**
  * Searches for flights based on specified criteria.
  * @param {object} criteria The search criteria.
- * @param {string} criteria.departureAirport The 3-letter code for the departure airport.
- * @param {string} criteria.arrivalAirport The 3-letter code for the arrival airport.
- * @param {string} criteria.departureDate The departure date in 'YYYY-MM-DD' format.
- * @param {string} criteria.seatClass The desired seat class (e.g., 'ECONOMY', 'BUSINESS').
+ * @param {string} criteria.departureAirport
+ * @param {string} criteria.arrivalAirport
+ * @param {string} criteria.departureDate
+ * @param {string} criteria.seatClass
+ * @param {string} [criteria.sortBy] - The sorting option ('price_asc' or 'time_asc').
  * @returns {Promise<Array>} A list of flight objects matching the criteria.
  */
 async function searchFlights({
@@ -14,14 +15,16 @@ async function searchFlights({
   arrivalAirport,
   departureDate,
   seatClass,
+  sortBy,
 }) {
-  const sql = `
+  // Base SQL query without the ORDER BY clause
+  let sql = `
     SELECT
       a.AIRLINE,
       a.FLIGHTNO,
       a.DEPARTUREDATETIME,
       a.DEPARTUREAIRPORT,
-      a.arrivalDateTime, -- Corrected from a.ARRIVEDATETIME
+      a.arrivalDateTime,
       a.ARRIVALAIRPORT,
       s.SEATCLASS,
       s.PRICE,
@@ -39,8 +42,18 @@ async function searchFlights({
       AND TRUNC(a.DEPARTUREDATETIME) = TO_DATE(:departureDate, 'YYYY-MM-DD')
       AND s.SEATCLASS = :seatClass
       AND (s.NO_OF_SEATS - NVL(r.RESERVED_COUNT, 0)) > 0
-    ORDER BY s.PRICE ASC
   `;
+
+  // Dynamically add the ORDER BY clause based on the sortBy parameter
+  switch (sortBy) {
+    case "time_asc":
+      sql += ` ORDER BY a.DEPARTUREDATETIME ASC`;
+      break;
+    case "price_asc":
+    default:
+      sql += ` ORDER BY s.PRICE ASC`;
+      break;
+  }
 
   const binds = {
     departureAirport,
