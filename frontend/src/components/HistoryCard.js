@@ -1,6 +1,6 @@
 import React from "react";
-// We will create this CSS file next
 import "./HistoryCard.css";
+import koreanAirLogo from "../koreanair.png"; // Import the logo image
 
 // Helper function to format currency
 const formatCurrency = (amount) => {
@@ -11,19 +11,16 @@ const formatCurrency = (amount) => {
 };
 
 const HistoryCard = ({ item, type }) => {
-  // Determine which date and amount to display based on the type of history
-  const displayDate =
-    type === "booking"
-      ? new Date(item.RESERVEDATETIME)
-      : new Date(item.CANCELDATETIME);
   const displayAmount = type === "booking" ? item.PAYMENT : item.REFUND;
 
   return (
     <div className="history-card">
       <div className="history-card-left">
-        <span className="airline-name">{item.AIRLINE}</span>
+        {/* Replace the text with the image */}
+        <img src={koreanAirLogo} alt={item.AIRLINE} className="airline-logo" />
       </div>
       <div className="history-card-center">
+        {/* ... (rest of the component is the same) ... */}
         <p className="route">
           {item.DEPARTUREAIRPORT} → {item.ARRIVALAIRPORT}
         </p>
@@ -52,7 +49,6 @@ const HistoryCard = ({ item, type }) => {
       </div>
       <div className="history-card-right">
         <p className="history-amount">{formatCurrency(displayAmount)}</p>
-        {/* Conditionally render the cancel button only for booking history */}
         {type === "booking" && (
           <button className="cancel-button">취소하기</button>
         )}

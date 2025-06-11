@@ -12,9 +12,17 @@
   flex-basis: 15%;
 }
 
-.history-card-left .airline-name {
+/* Remove the old text style */
+/* .history-card-left .airline-name {
   font-weight: 600;
   font-size: 1.1rem;
+} */
+
+/* Add new style for the logo image - this is the same style from FlightCard.css */
+.airline-logo {
+  height: 20px;
+  width: auto;
+  display: block;
 }
 
 .history-card-center {
