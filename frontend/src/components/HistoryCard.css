@@ -35,6 +35,13 @@
   margin: 0;
 }
 
+/* This is the new style for the event time */
+.history-card-center .event-time {
+  font-size: 0.85rem;
+  color: #868e96;
+  margin: 0.5rem 0 0 0; /* Add space above this element */
+}
+
 .history-card-right {
   flex-basis: 25%;
   text-align: right;
@@ -67,9 +74,8 @@
   background-color: #c82333;
 }
 
-/* This is the new rule for the disabled state */
 .cancel-button:disabled {
   background-color: #6c757d;
-  filter: grayscale(80%); /* Apply a grayscale filter */
+  filter: grayscale(80%);
   cursor: not-allowed;
 }
