@@ -1,33 +1,157 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-// We will create these in the next steps
-// import cancellationService from '../services/cancellationService';
-// import './CancellationPage.css';
+import cancellationService from "../services/cancellationService";
+import "./CancellationPage.css"; // We will create this next
+import koreanAirLogo from "../koreanair.png";
+
+// Helper function to format currency
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat("ko-KR", {
+    style: "currency",
+    currency: "KRW",
+  }).format(amount);
+};
+
+// Helper function to calculate cancellation fee and refund
+const calculateRefund = (booking) => {
+  if (!booking) return { fee: 0, refund: 0, daysUntilDeparture: 0 };
+
+  const departureDate = new Date(booking.DEPARTUREDATETIME);
+  const today = new Date();
+
+  const diffTime =
+    departureDate.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0);
+  const daysUntilDeparture = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  let fee = 0;
+  if (daysUntilDeparture >= 15) {
+    fee = 150000;
+  } else if (daysUntilDeparture >= 4) {
+    fee = 180000;
+  } else if (daysUntilDeparture >= 1) {
+    fee = 250000;
+  } else {
+    fee = booking.PAYMENT;
+  }
+
+  const refund = booking.PAYMENT - fee;
+  return { fee, refund, daysUntilDeparture };
+};
 
 const CancellationPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isCancelling, setIsCancelling] = useState(false);
 
-  // Get the original booking item passed from the history page
   const bookingItem = location.state?.bookingItem;
 
-  // For now, we'll just display the raw data to confirm it's being passed correctly.
-
-  // Safeguard: if no data is passed, redirect back to history.
+  // Safeguard
   useEffect(() => {
     if (!bookingItem) {
       navigate("/history");
     }
   }, [bookingItem, navigate]);
 
+  const handleFinalCancel = async () => {
+    setIsCancelling(true);
+    try {
+      // The backend needs the full original booking object to process the cancellation
+      await cancellationService.createCancellation(bookingItem);
+      alert("Cancellation successful!");
+      navigate("/history"); // Go back to the history page to see the change
+    } catch (error) {
+      alert(`Cancellation failed: ${error.message}`);
+    } finally {
+      setIsCancelling(false);
+    }
+  };
+
   if (!bookingItem) {
-    return null; // Don't render anything before redirecting
+    return <div>Loading...</div>;
   }
 
+  // Calculate fees to display on the page
+  const { fee, refund, daysUntilDeparture } = calculateRefund(bookingItem);
+
   return (
-    <div className="cancellation-page">
-      <h1>취소하는 예약 정보</h1>
-      <pre>{JSON.stringify(bookingItem, null, 2)}</pre>
+    <div className="cancellation-page-container">
+      <h1 className="page-title">취소하는 예약 정보</h1>
+      <div className="cancellation-content">
+        <div className="cancellation-main">
+          <div className="itinerary-details">
+            <div className="flight-info-header">
+              <img
+                src={koreanAirLogo}
+                alt={bookingItem.AIRLINE}
+                className="airline-logo-small"
+              />
+            </div>
+            <div className="flight-info-body">
+              <p className="route">
+                {bookingItem.DEPARTUREAIRPORT} → {bookingItem.ARRIVALAIRPORT}
+              </p>
+              <p className="flight-meta">
+                {new Date(bookingItem.DEPARTUREDATETIME).toLocaleDateString(
+                  "ko-KR"
+                )}{" "}
+                ...
+              </p>
+            </div>
+          </div>
+          <div className="cancellation-policy">
+            <h2>위약금 정책</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>15일 이전</th>
+                  <th>4일 - 14일 이전</th>
+                  <th>3일 이전</th>
+                  <th>당일</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>-150,000 원</td>
+                  <td>-180,000 원</td>
+                  <td>-250,000 원</td>
+                  <td>전액 위약금</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="cancellation-summary">
+          <h2>환불 예상 금액</h2>
+          <div className="fare-item">
+            <span>결제 요금</span>
+            <span>{formatCurrency(bookingItem.PAYMENT)}</span>
+          </div>
+          <div className="fare-item">
+            <span>
+              위약금 <small>(출발 {daysUntilDeparture}일 전)</small>
+            </span>
+            <span className="fee-amount">{formatCurrency(fee * -1)}</span>
+          </div>
+          <hr />
+          <div className="fare-total">
+            <span>총액</span>
+            <span className="total-price">{formatCurrency(refund)}</span>
+          </div>
+        </div>
+      </div>
+      <div className="payment-footer">
+        <div className="final-price-info">
+          <span>최종 환불 금액</span>
+          <span className="final-price">{formatCurrency(refund)}</span>
+        </div>
+        <button
+          onClick={handleFinalCancel}
+          disabled={isCancelling}
+          className="payment-button cancel-final-button"
+        >
+          {isCancelling ? "취소 처리 중..." : "취소하기"}
+        </button>
+      </div>
     </div>
   );
 };
