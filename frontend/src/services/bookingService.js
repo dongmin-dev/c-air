@@ -13,7 +13,7 @@ const createBooking = async (flight, user) => {
     // The request body must match what the backend controller expects: { flight, cno }
     const payload = {
       flight: flight,
-      cno: user.CNO,
+      cno: user.cno, // Corrected from user.CNO to user.cno
     };
     const response = await axios.post(API_URL, payload);
     return response.data;
