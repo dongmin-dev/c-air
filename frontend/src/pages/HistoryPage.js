@@ -1,7 +1,25 @@
 import React, { useState, useEffect } from "react";
 import historyService from "../services/historyService";
-import HistoryCard from "../components/HistoryCard"; // Import the new component
-import "./HistoryPage.css"; // We will create this next
+import HistoryCard from "../components/HistoryCard";
+import "./HistoryPage.css";
+
+// New helper function to group history items by date
+const groupHistoryByDate = (items, dateField) => {
+  if (!items) return {};
+
+  return items.reduce((acc, item) => {
+    const date = new Date(item[dateField]).toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    if (!acc[date]) {
+      acc[date] = [];
+    }
+    acc[date].push(item);
+    return acc;
+  }, {});
+};
 
 const HistoryPage = () => {
   const [user, setUser] = useState(null);
@@ -9,7 +27,11 @@ const HistoryPage = () => {
     startDate: "2025-05-01",
     endDate: "2025-06-30",
   });
-  const [history, setHistory] = useState({ bookings: [], cancellations: [] });
+  // This state will now hold the grouped data
+  const [groupedHistory, setGroupedHistory] = useState({
+    bookings: {},
+    cancellations: {},
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -27,7 +49,19 @@ const HistoryPage = () => {
       historyService
         .getHistory(user.cno, dateRange)
         .then((data) => {
-          setHistory(data);
+          // Group the data after fetching
+          const groupedBookings = groupHistoryByDate(
+            data.bookings,
+            "RESERVEDATETIME"
+          );
+          const groupedCancellations = groupHistoryByDate(
+            data.cancellations,
+            "CANCELDATETIME"
+          );
+          setGroupedHistory({
+            bookings: groupedBookings,
+            cancellations: groupedCancellations,
+          });
         })
         .catch((err) => {
           setError("Failed to load history.");
@@ -41,7 +75,6 @@ const HistoryPage = () => {
   return (
     <div className="history-page-container">
       <div className="history-header">
-        {/* Placeholder for the date range picker */}
         <div className="date-picker-placeholder">
           <span className="calendar-icon">📅</span>
           <span>
@@ -58,14 +91,18 @@ const HistoryPage = () => {
         <>
           <div className="history-section">
             <h2>예약 내역</h2>
-            <p className="section-date">2025년 6월 5일</p>
-            {history.bookings.length > 0 ? (
-              history.bookings.map((item) => (
-                <HistoryCard
-                  key={`booking-${item.RESERVEDATETIME}`}
-                  item={item}
-                  type="booking"
-                />
+            {Object.keys(groupedHistory.bookings).length > 0 ? (
+              Object.entries(groupedHistory.bookings).map(([date, items]) => (
+                <div key={`booking-group-${date}`}>
+                  <p className="section-date">{date}</p>
+                  {items.map((item) => (
+                    <HistoryCard
+                      key={`booking-${item.RESERVEDATETIME}`}
+                      item={item}
+                      type="booking"
+                    />
+                  ))}
+                </div>
               ))
             ) : (
               <p>No booking history found for this period.</p>
@@ -74,15 +111,21 @@ const HistoryPage = () => {
 
           <div className="history-section">
             <h2>취소 내역</h2>
-            <p className="section-date">2025년 6월 5일</p>
-            {history.cancellations.length > 0 ? (
-              history.cancellations.map((item) => (
-                <HistoryCard
-                  key={`cancel-${item.CANCELDATETIME}`}
-                  item={item}
-                  type="cancellation"
-                />
-              ))
+            {Object.keys(groupedHistory.cancellations).length > 0 ? (
+              Object.entries(groupedHistory.cancellations).map(
+                ([date, items]) => (
+                  <div key={`cancel-group-${date}`}>
+                    <p className="section-date">{date}</p>
+                    {items.map((item) => (
+                      <HistoryCard
+                        key={`cancel-${item.CANCELDATETIME}`}
+                        item={item}
+                        type="cancellation"
+                      />
+                    ))}
+                  </div>
+                )
+              )
             ) : (
               <p>No cancellation history found for this period.</p>
             )}
