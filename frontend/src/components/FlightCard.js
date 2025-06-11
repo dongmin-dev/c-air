@@ -1,5 +1,5 @@
 import React from "react";
-import "./FlightCard.css"; // We will create this next
+import "./FlightCard.css";
 
 // Helper function to format the date and time
 const formatDateTime = (isoString) => {
@@ -28,7 +28,6 @@ const FlightCard = ({ flight }) => {
   return (
     <div className="flight-card">
       <div className="airline-section">
-        {/* Placeholder for airline logo */}
         <span className="airline-name">{flight.AIRLINE}</span>
       </div>
       <div className="details-section">
@@ -40,8 +39,9 @@ const FlightCard = ({ flight }) => {
         </div>
         <div className="duration-line"></div>
         <div className="time-info">
+          {/* This line has been corrected */}
           <p className="time">
-            {formatDateTime(flight.arrivalDateTime).split(" ")[4]}
+            {formatDateTime(flight.ARRIVALDATETIME).split(" ")[4]}
           </p>
           <p className="airport-code">{flight.ARRIVALAIRPORT}</p>
         </div>
