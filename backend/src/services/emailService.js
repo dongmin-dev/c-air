@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const path = require("path"); // Import the path module
+const path = require("path");
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -74,8 +74,9 @@ const sendBookingConfirmation = async (user, flight) => {
     attachments: [
       {
         filename: "CAIR-Logo-blue.png",
-        path: path.join(__dirname, "CAIR-Logo-blue.png"),
-        cid: "logo", // same cid value as in the html img src
+        // This path now correctly navigates up one directory '..' to find the logo
+        path: path.join(__dirname, "..", "CAIR-Logo-blue.png"),
+        cid: "logo",
       },
     ],
   };
@@ -145,7 +146,8 @@ const sendCancellationConfirmation = async (user, booking, refundAmount) => {
     attachments: [
       {
         filename: "CAIR-Logo-blue.png",
-        path: path.join(__dirname, "CAIR-Logo-blue.png"),
+        // This path now correctly navigates up one directory '..' to find the logo
+        path: path.join(__dirname, "..", "CAIR-Logo-blue.png"),
         cid: "logo",
       },
     ],
