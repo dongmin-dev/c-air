@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const path = require("path"); // Import the path module
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -15,7 +16,68 @@ const sendBookingConfirmation = async (user, flight) => {
     from: `"CNU Airline" <${process.env.EMAIL_USER}>`,
     to: user.EMAIL,
     subject: `[CNU Airline] Flight Booking Confirmation - ${flight.FLIGHTNO}`,
-    html: `... (html content remains the same) ...`,
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <img src="cid:logo" alt="C-AIR Logo" style="height: 30px; margin-bottom: 20px;" />
+        <h2>Booking Confirmation</h2>
+        <p>Dear ${user.NAME},</p>
+        <p>Your flight reservation with CNU Airline has been successfully confirmed. Please find your e-ticket details below.</p>
+        <hr>
+        <h3>Flight Details</h3>
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Airline</strong></td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${
+              flight.AIRLINE
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Flight Number</strong></td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${
+              flight.FLIGHTNO
+            }</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Departure</strong></td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${
+              flight.DEPARTUREAIRPORT
+            } at ${new Date(flight.DEPARTUREDATETIME).toLocaleString(
+      "en-US"
+    )}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Arrival</strong></td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${
+              flight.ARRIVALAIRPORT
+            } at ${new Date(flight.ARRIVALDATETIME).toLocaleString(
+      "en-US"
+    )}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Class</strong></td>
+            <td style="padding: 8px; border: 1px solid #ddd;">${
+              flight.SEATCLASS
+            }</td>
+          </tr>
+           <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Amount Paid</strong></td>
+            <td style="padding: 8px; border: 1px solid #ddd;"><strong>${new Intl.NumberFormat(
+              "ko-KR",
+              { style: "currency", currency: "KRW" }
+            ).format(flight.PRICE)}</strong></td>
+          </tr>
+        </table>
+        <hr>
+        <p>Thank you for choosing CNU Airline.</p>
+      </div>
+    `,
+    attachments: [
+      {
+        filename: "CAIR-Logo-blue.png",
+        path: path.join(__dirname, "CAIR-Logo-blue.png"),
+        cid: "logo", // same cid value as in the html img src
+      },
+    ],
   };
   try {
     const info = await transporter.sendMail(mailOptions);
@@ -25,35 +87,42 @@ const sendBookingConfirmation = async (user, flight) => {
   }
 };
 
-/**
- * Sends a cancellation confirmation email.
- * @param {object} user The user object (containing NAME, EMAIL).
- * @param {object} booking The original booking details that were canceled.
- * @param {number} refundAmount The calculated refund amount.
- */
 const sendCancellationConfirmation = async (user, booking, refundAmount) => {
   const mailOptions = {
     from: `"CNU Airline" <${process.env.EMAIL_USER}>`,
-    to: user.EMAIL, // We need to fetch the user object to get their email
+    to: user.EMAIL,
     subject: `[CNU Airline] Flight Cancellation Confirmation - ${booking.FLIGHTNO}`,
     html: `
-      <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+      <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <img src="cid:logo" alt="C-AIR Logo" style="height: 30px; margin-bottom: 20px;" />
         <h2>Cancellation Confirmation</h2>
         <p>Dear ${user.NAME},</p>
         <p>This email confirms that your flight reservation has been successfully canceled. Please find the details below.</p>
         <hr>
         <h3>Canceled Flight Details</h3>
-        <p>
-          <strong>Flight:</strong> ${booking.AIRLINE} ${booking.FLIGHTNO}<br>
-          <strong>Route:</strong> ${booking.DEPARTUREAIRPORT} → ${
-      booking.ARRIVALAIRPORT
-    }<br>
-          <strong>Departure:</strong> ${new Date(
-            booking.DEPARTUREDATETIME
-          ).toLocaleString("en-US")}
-        </p>
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>Flight</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${
+                  booking.AIRLINE
+                } ${booking.FLIGHTNO}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>Route</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${
+                  booking.DEPARTUREAIRPORT
+                } → ${booking.ARRIVALAIRPORT}</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>Departure</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${new Date(
+                  booking.DEPARTUREDATETIME
+                ).toLocaleString("en-US")}</td>
+            </tr>
+        </table>
+        <br>
         <h3>Refund Details</h3>
-        <table style="width: 100%; border-collapse: collapse;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
           <tr>
             <td style="padding: 8px; border: 1px solid #ddd;"><strong>Original Payment</strong></td>
             <td style="padding: 8px; border: 1px solid #ddd;">${new Intl.NumberFormat(
@@ -63,16 +132,23 @@ const sendCancellationConfirmation = async (user, booking, refundAmount) => {
           </tr>
           <tr>
             <td style="padding: 8px; border: 1px solid #ddd;"><strong>Total Refund</strong></td>
-            <td style="padding: 8px; border: 1px solid #ddd;">${new Intl.NumberFormat(
+            <td style="padding: 8px; border: 1px solid #ddd;"><strong>${new Intl.NumberFormat(
               "ko-KR",
               { style: "currency", currency: "KRW" }
-            ).format(refundAmount)}</td>
+            ).format(refundAmount)}</strong></td>
           </tr>
         </table>
         <hr>
         <p>Thank you for choosing CNU Airline.</p>
       </div>
     `,
+    attachments: [
+      {
+        filename: "CAIR-Logo-blue.png",
+        path: path.join(__dirname, "CAIR-Logo-blue.png"),
+        cid: "logo",
+      },
+    ],
   };
 
   try {
@@ -85,5 +161,5 @@ const sendCancellationConfirmation = async (user, booking, refundAmount) => {
 
 module.exports = {
   sendBookingConfirmation,
-  sendCancellationConfirmation, // Add the new function to the exports
+  sendCancellationConfirmation,
 };
