@@ -18,12 +18,13 @@ const createBooking = async (user, flight) => {
       GROUP BY FLIGHTNO, DEPARTUREDATETIME, SEATCLASS
     ) r ON s.FLIGHTNO = r.FLIGHTNO AND s.DEPARTUREDATETIME = r.DEPARTUREDATETIME AND s.SEATCLASS = r.SEATCLASS
     WHERE s.FLIGHTNO = :flightNo
-      AND s.DEPARTUREDATETIME = TO_TIMESTAMP(:departureDateTime, 'YYYY-MM-DD"T"HH24:MI:SS.FF3"Z"')
+      AND s.DEPARTUREDATETIME = :departureDateTime
       AND s.SEATCLASS = :seatClass
   `;
+  // Convert date string to a Date object for the driver to handle correctly
   const availabilityBinds = {
     flightNo: flight.FLIGHTNO,
-    departureDateTime: flight.DEPARTUREDATETIME,
+    departureDateTime: new Date(flight.DEPARTUREDATETIME),
     seatClass: flight.SEATCLASS,
   };
   const availabilityResult = await db.execute(
@@ -41,36 +42,27 @@ const createBooking = async (user, flight) => {
   // --- 2. Insert the new reservation into the database ---
   const insertSql = `
     INSERT INTO RESERVE (flightNo, departureDateTime, seatClass, payment, reserveDateTime, cno)
-    VALUES (
-      :flightNo, 
-      TO_TIMESTAMP(:departureDateTime, 'YYYY-MM-DD"T"HH24:MI:SS.FF3"Z"'), 
-      :seatClass, 
-      :payment, 
-      SYSTIMESTAMP, 
-      :cno
-    )
+    VALUES (:flightNo, :departureDateTime, :seatClass, :payment, SYSTIMESTAMP, :cno)
   `;
+  // Convert date string to a Date object for the driver to handle correctly
   const insertBinds = {
     flightNo: flight.FLIGHTNO,
-    departureDateTime: flight.DEPARTUREDATETIME,
+    departureDateTime: new Date(flight.DEPARTUREDATETIME),
     seatClass: flight.SEATCLASS,
     payment: flight.PRICE,
     cno: user.CNO,
   };
 
-  // We need to set autoCommit to true for INSERT statements with the oracledb driver
   const options = { autoCommit: true };
 
   try {
     await db.execute(insertSql, insertBinds, options);
 
     // --- 3. Send confirmation email after successful insertion ---
-    // This runs in the background and does not block the API response
     emailService.sendBookingConfirmation(user, flight);
 
     return { success: true, message: "Booking successful!" };
   } catch (error) {
-    // Check for a unique constraint violation error (user already booked this flight)
     if (error.errorNum && error.errorNum === 1) {
       throw new Error("You have already booked this flight.");
     }
