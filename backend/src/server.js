@@ -7,8 +7,7 @@ const db = require("./config/database");
 
 // --- Import Routes ---
 const authRoutes = require("./routes/authRoutes");
-// We will add other routes here later.
-// const flightRoutes = require('./routes/flightRoutes');
+const flightRoutes = require("./routes/flightRoutes"); // Import flight routes
 
 const app = express();
 
@@ -22,11 +21,9 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to the CNU Airline Reservation System API!" });
 });
 
-// Register the authentication routes
+// Register the application's routes
 app.use("/api/auth", authRoutes);
-
-// We will add the application's main routes here later. For example:
-// app.use('/api/flights', flightRoutes);
+app.use("/api/flights", flightRoutes); // Register flight routes
 
 // === Server Initialization ===
 const PORT = process.env.PORT || 5000;
