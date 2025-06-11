@@ -13,7 +13,6 @@ const SearchForm = ({ params, setParams, onSearch }) => {
 
   return (
     <div className="search-form-wrapper">
-      {/* We use a <form> tag to group the inputs */}
       <form
         className="search-form-container"
         onSubmit={(e) => {
