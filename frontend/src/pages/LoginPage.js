@@ -1,22 +1,22 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import authService from "../services/authService";
-import "./LoginPage.css"; // We will create this CSS file next
+import "./LoginPage.css";
 
 const LoginPage = () => {
   const [cno, setCno] = useState("");
   const [passwd, setPasswd] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Get the navigate function
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent the form from reloading the page
-    setError(""); // Clear previous errors
+    e.preventDefault();
+    setError("");
 
     try {
       await authService.login(cno, passwd);
-      // On successful login, the authService saves user info.
-      // We can now redirect the user to the main page.
-      // For now, we'll just reload to a "logged in" state.
-      window.location.href = "/"; // Redirect to home page
+      // On successful login, navigate to the search page
+      navigate("/search");
     } catch (err) {
       setError("Login failed. Please check your member number and password.");
       console.error(err);
@@ -50,7 +50,6 @@ const LoginPage = () => {
           {error && <p className="error-message">{error}</p>}
 
           <div className="forgot-password-link">
-            {/* Per project requirements, this link is non-functional. */}
             <a href="#">비밀번호를 잊으셨나요?</a>
           </div>
 
@@ -59,7 +58,6 @@ const LoginPage = () => {
           </button>
         </form>
         <div className="signup-link">
-          {/* Per project requirements, this link is non-functional. */}
           <span>계정이 없으신가요? </span>
           <a href="#">회원가입</a>
         </div>
