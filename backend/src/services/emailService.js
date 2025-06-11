@@ -87,7 +87,12 @@ const sendBookingConfirmation = async (user, flight) => {
   }
 };
 
-const sendCancellationConfirmation = async (user, booking, refundAmount) => {
+const sendCancellationConfirmation = async (
+  user,
+  booking,
+  refundAmount,
+  cancellationFee
+) => {
   const mailOptions = {
     from: `"CNU Airline" <${process.env.EMAIL_USER}>`,
     to: user.EMAIL,
@@ -135,6 +140,13 @@ const sendCancellationConfirmation = async (user, booking, refundAmount) => {
               "ko-KR",
               { style: "currency", currency: "KRW" }
             ).format(booking.PAYMENT)}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px; border: 1px solid #ddd;"><strong>Cancellation Fee</strong></td>
+            <td style="padding: 8px; border: 1px solid #ddd;">-${new Intl.NumberFormat(
+              "ko-KR",
+              { style: "currency", currency: "KRW" }
+            ).format(cancellationFee)}</td>
           </tr>
           <tr>
             <td style="padding: 8px; border: 1px solid #ddd;"><strong>Total Refund</strong></td>

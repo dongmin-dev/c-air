@@ -82,7 +82,12 @@ const createCancellation = async (booking) => {
     await connection.commit();
 
     // --- 7. Send confirmation email after successful transaction ---
-    emailService.sendCancellationConfirmation(user, booking, refundAmount);
+    emailService.sendCancellationConfirmation(
+      user,
+      booking,
+      refundAmount,
+      cancellationFee
+    );
 
     return { success: true, message: "Cancellation successful." };
   } catch (error) {
