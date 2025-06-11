@@ -1,6 +1,5 @@
 const db = require("./databaseService");
 
-// createCancellation function remains the same
 const createCancellation = async (booking) => {
   const departureDate = new Date(booking.DEPARTUREDATETIME);
   const today = new Date();
@@ -18,20 +17,22 @@ const createCancellation = async (booking) => {
     cancellationFee = booking.PAYMENT;
   }
   const refundAmount = booking.PAYMENT - cancellationFee;
+
   const connection = await db.getConnectionForTransaction();
   try {
     const insertCancelSql = `
       INSERT INTO CANCEL (flightNo, departureDateTime, seatClass, refund, cancelDateTime, cno)
       VALUES (:flightNo, :departureDateTime, :seatClass, :refund, SYSTIMESTAMP, :cno)
     `;
-    const binds = {
+    const insertBinds = {
       flightNo: booking.FLIGHTNO,
       departureDateTime: new Date(booking.DEPARTUREDATETIME),
       seatClass: booking.SEATCLASS,
       refund: refundAmount,
       cno: booking.CNO,
     };
-    await connection.execute(insertCancelSql, binds);
+    await connection.execute(insertCancelSql, insertBinds);
+
     const deleteReserveSql = `
       DELETE FROM RESERVE
       WHERE flightNo = :flightNo
@@ -39,7 +40,15 @@ const createCancellation = async (booking) => {
       AND seatClass = :seatClass
       AND cno = :cno
     `;
-    await connection.execute(deleteReserveSql, binds);
+    // This is the corrected part: Create a separate binds object for the DELETE statement
+    const deleteBinds = {
+      flightNo: booking.FLIGHTNO,
+      departureDateTime: new Date(booking.DEPARTUREDATETIME),
+      seatClass: booking.SEATCLASS,
+      cno: booking.CNO,
+    };
+    await connection.execute(deleteReserveSql, deleteBinds);
+
     await connection.commit();
     return { success: true, message: "Cancellation successful." };
   } catch (error) {
@@ -53,17 +62,12 @@ const createCancellation = async (booking) => {
   }
 };
 
-/**
- * Fetches the full details of a single reservation.
- * THIS FUNCTION CONTAINS THE NEW FIX.
- */
 const getBookingDetails = async (
   flightNo,
   departureDateTime,
   seatClass,
   cno
 ) => {
-  // We convert the database TIMESTAMP into a specific string format for comparison.
   const sql = `
       SELECT r.CNO, r.PAYMENT, r.RESERVEDATETIME,
              a.AIRLINE, a.FLIGHTNO, a.DEPARTUREDATETIME, a.DEPARTUREAIRPORT, 
@@ -71,13 +75,10 @@ const getBookingDetails = async (
       FROM RESERVE r
       JOIN AIRPLANE a ON r.flightNo = a.flightNo AND r.departureDateTime = a.departureDateTime
       WHERE r.flightNo = :flightNo
-      -- This comparison is now string-to-string, which is more reliable
       AND TO_CHAR(r.departureDateTime, 'YYYY-MM-DD"T"HH24:MI:SS') = SUBSTR(:departureDateTime, 1, 19)
       AND r.seatClass = :seatClass
       AND r.cno = :cno
     `;
-
-  // We bind the original string from the URL directly.
   const binds = {
     flightNo,
     departureDateTime,
