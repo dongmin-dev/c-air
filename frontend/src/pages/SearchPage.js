@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react"; // Import useCallback
 import flightService from "../services/flightService";
 import SearchForm from "../components/SearchForm";
 import SearchResults from "../components/SearchResults";
@@ -17,11 +17,10 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // This function is now separate, can be called by search button OR sort change
-  const performSearch = async () => {
+  // Use useCallback to memoize the function and ensure it has the latest state
+  const performSearch = useCallback(async () => {
     setIsLoading(true);
     setError("");
-    // No longer setting flights to null, so the list doesn't disappear during sort
     try {
       const paramsWithSort = { ...searchParams, sortBy };
       const results = await flightService.searchFlights(paramsWithSort);
@@ -31,20 +30,19 @@ const SearchPage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [searchParams, sortBy]); // Dependencies for useCallback
 
-  // This effect hook re-runs the search whenever 'sortBy' changes.
+  // This effect hook now correctly re-runs the search
   useEffect(() => {
-    // Only run the search if flights have been loaded at least once
     if (flights !== null) {
       performSearch();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy]);
+  }, [sortBy, performSearch]); // Add performSearch to the dependency array
 
   const handleSearchButtonClick = () => {
     setFlights(null); // Clear previous results completely for a new search
-    performSearch();
+    // A slight delay to ensure state updates before searching
+    setTimeout(() => performSearch(), 0);
   };
 
   return (
