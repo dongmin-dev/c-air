@@ -15,16 +15,21 @@
   padding: 0 2rem;
 }
 
-/* Left side of the header */
+/* This is the new rule for the left-side group */
+.header-group-left {
+  display: flex;
+  align-items: center;
+  gap: 3rem; /* Controls the space between the logo and the nav links */
+}
+
 .header-left .header-logo {
-  height: 25px; /* Adjust size as needed */
+  height: 25px;
   display: block;
 }
 
-/* Middle navigation */
 .header-nav {
   display: flex;
-  gap: 2rem; /* Space between nav links */
+  gap: 2rem;
 }
 
 .nav-link {
@@ -39,7 +44,6 @@
   color: #007bff;
 }
 
-/* Right side of the header */
 .header-right {
   display: flex;
   align-items: center;
