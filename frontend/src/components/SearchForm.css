@@ -1,5 +1,4 @@
 .search-form-wrapper {
-  /* Provides some spacing around the form */
   padding: 2rem 0;
 }
 
@@ -7,7 +6,7 @@
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  align-items: center; /* Vertically aligns items in the middle */
+  align-items: center;
   background-color: #fff;
   border-radius: 16px;
   border: 1px solid #dee2e6;
@@ -15,11 +14,10 @@
 }
 
 .form-section {
-  flex: 1; /* Each section will take up equal space */
+  flex: 1;
   padding: 1rem 1.5rem;
-  border-right: 1px solid #e9ecef; /* Vertical line separator */
+  border-right: 1px solid #e9ecef;
   cursor: pointer;
-  transition: background-color 0.2s;
 }
 
 .form-section:hover {
@@ -34,14 +32,29 @@
   margin-bottom: 0.25rem;
 }
 
-.form-section .form-value {
+/* New style for our inputs and select dropdown */
+.form-input {
+  width: 100%;
+  border: none;
+  background-color: transparent;
   font-size: 1.1rem;
   font-weight: 500;
   color: #212529;
+  font-family: inherit; /* Ensure it uses the page's font */
+}
+
+/* Remove the default focus outline */
+.form-input:focus {
+  outline: none;
+}
+
+/* Specific styling for the date picker icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
 }
 
 .search-action-button {
-  background-color: #0d6efd; /* A vibrant blue */
+  background-color: #0d6efd;
   color: white;
   border: none;
   font-size: 1.1rem;
@@ -51,7 +64,6 @@
   border-bottom-right-radius: 14px;
   cursor: pointer;
   transition: background-color 0.2s;
-  /* Removes the border from the last form section */
   margin-left: -1px;
 }
 

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import flightService from "../services/flightService";
-import SearchForm from "../components/SearchForm"; // Import the SearchForm component
-import "./SearchPage.css"; // We will create this CSS file later for page-level layout
+import SearchForm from "../components/SearchForm";
+import "./SearchPage.css";
 
 const SearchPage = () => {
-  // State to hold the search form inputs
   const [searchParams, setSearchParams] = useState({
     departureAirport: "ICN",
     arrivalAirport: "JFK",
@@ -12,20 +11,18 @@ const SearchPage = () => {
     seatClass: "ECONOMY",
   });
 
-  // State for the flight results, loading status, and errors
   const [flights, setFlights] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // This function is called when the user clicks the search button
   const handleSearch = async () => {
     setIsLoading(true);
     setError("");
-    console.log("Searching with params:", searchParams); // For debugging
+    console.log("Searching with params:", searchParams);
     try {
       const results = await flightService.searchFlights(searchParams);
       setFlights(results);
-      console.log("Search results:", results); // For debugging
+      console.log("Search results:", results);
     } catch (err) {
       setError("Failed to fetch flights. Please try again later.");
     } finally {
@@ -38,7 +35,11 @@ const SearchPage = () => {
       <div className="search-page-title-container">
         <h1>항공기를 검색하세요.</h1>
       </div>
-      <SearchForm params={searchParams} onSearch={handleSearch} />
+      <SearchForm
+        params={searchParams}
+        setParams={setSearchParams} /* Pass the state setter function */
+        onSearch={handleSearch}
+      />
       {/* We will add the <SearchResults /> component here in a later step */}
     </div>
   );
