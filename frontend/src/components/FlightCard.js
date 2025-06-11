@@ -1,7 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./FlightCard.css";
 
-// Helper function to format the date and time
+// Helper functions (formatDateTime, formatCurrency) remain the same...
 const formatDateTime = (isoString) => {
   const date = new Date(isoString);
   const options = {
@@ -16,7 +17,6 @@ const formatDateTime = (isoString) => {
   return new Intl.DateTimeFormat("ko-KR", options).format(date);
 };
 
-// Helper function to format currency
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat("ko-KR", {
     style: "currency",
@@ -25,6 +25,14 @@ const formatCurrency = (amount) => {
 };
 
 const FlightCard = ({ flight }) => {
+  const navigate = useNavigate(); // Get the navigate function
+
+  // This function will be called when the "Select" button is clicked
+  const handleSelect = () => {
+    // Navigate to the '/book' page and pass the flight object in the state
+    navigate("/book", { state: { flight: flight } });
+  };
+
   return (
     <div className="flight-card">
       <div className="airline-section">
@@ -39,7 +47,6 @@ const FlightCard = ({ flight }) => {
         </div>
         <div className="duration-line"></div>
         <div className="time-info">
-          {/* This line has been corrected */}
           <p className="time">
             {formatDateTime(flight.ARRIVALDATETIME).split(" ")[4]}
           </p>
@@ -50,7 +57,9 @@ const FlightCard = ({ flight }) => {
       <div className="pricing-section">
         <p className="flight-number">{flight.FLIGHTNO}</p>
         <p className="price">{formatCurrency(flight.PRICE)}</p>
-        <button className="select-button">선택하기 →</button>
+        <button className="select-button" onClick={handleSelect}>
+          선택하기 →
+        </button>
       </div>
     </div>
   );
