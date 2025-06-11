@@ -104,17 +104,22 @@
 }
 
 .select-button {
-  background-color: #0d6efd;
+  background-color: #007bff; /* Your existing button color */
   color: white;
   border: none;
-  padding: 0.75rem 1.25rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px;
+  padding: 10px 15px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
 .select-button:hover {
-  background-color: #0b5ed7;
+  background-color: #0056b3; /* Your existing hover color */
+}
+
+.select-button:disabled {
+  background-color: #cccccc; /* Grey background for disabled state */
+  color: #666666; /* Darker grey text for readability */
+  cursor: not-allowed; /* Indicates the button is not clickable */
 }

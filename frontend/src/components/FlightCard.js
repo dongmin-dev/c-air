@@ -32,6 +32,8 @@ const FlightCard = ({ flight }) => {
     navigate("/book", { state: { flight: flight } });
   };
 
+  const hasDeparted = new Date(flight.DEPARTUREDATETIME) < new Date();
+
   return (
     <div className="flight-card">
       <div className="airline-section">
@@ -62,7 +64,11 @@ const FlightCard = ({ flight }) => {
       <div className="pricing-section">
         <p className="flight-number">{flight.FLIGHTNO}</p>
         <p className="price">{formatCurrency(flight.PRICE)}</p>
-        <button className="select-button" onClick={handleSelect}>
+        <button
+          className="select-button"
+          onClick={handleSelect}
+          disabled={hasDeparted}
+        >
           선택하기 →
         </button>
       </div>
