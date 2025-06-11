@@ -1,0 +1,17 @@
+.search-page {
+  /* Adds some vertical spacing for the overall page */
+  padding: 2rem 0;
+}
+
+.search-page-title-container {
+  /* Aligns the title with the search form */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  margin-bottom: 1rem;
+}
+
+.search-page-title-container h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
