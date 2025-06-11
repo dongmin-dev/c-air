@@ -1,42 +1,19 @@
 const oracledb = require("oracledb");
 
+// ... (keep the existing 'execute' function)
+
 /**
- * Executes a database query.
- * @param {string} statement The SQL statement to execute.
- * @param {object | Array} binds The bind parameters for the query.
- * @param {object} opts The query execution options.
- * @returns {Promise<object>} The result of the query execution.
+ * Gets a connection from the pool to manage a transaction manually.
+ * @returns {Promise<object>} A database connection object.
  */
-async function execute(statement, binds = [], opts = {}) {
-  let connection;
+async function getConnectionForTransaction() {
   try {
-    // Get a connection from the default pool
-    connection = await oracledb.getConnection();
-
-    // Set default options
-    const options = {
-      outFormat: oracledb.OUT_FORMAT_OBJECT, // Return results as javascript objects
-      ...opts,
-    };
-
-    // Execute the statement
-    const result = await connection.execute(statement, binds, options);
-
-    return result;
+    const connection = await oracledb.getConnection();
+    return connection;
   } catch (err) {
-    console.error("Database execution error:", err);
-    // Re-throw the error to be handled by the calling function
+    console.error("Error getting connection for transaction:", err);
     throw err;
-  } finally {
-    if (connection) {
-      try {
-        // Release the connection back to the pool
-        await connection.close();
-      } catch (err) {
-        console.error("Error closing database connection:", err);
-      }
-    }
   }
 }
 
-module.exports = { execute };
+module.exports = { execute, getConnectionForTransaction }; // Add the new export
