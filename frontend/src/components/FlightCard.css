@@ -12,9 +12,17 @@
   flex-basis: 15%;
 }
 
-.airline-name {
+/* Remove the old text style */
+/* .airline-name {
   font-weight: 600;
   font-size: 1.1rem;
+} */
+
+/* Add new style for the logo image */
+.airline-logo {
+  height: 20px; /* Controls the height of the logo */
+  width: auto;
+  display: block;
 }
 
 .details-section {

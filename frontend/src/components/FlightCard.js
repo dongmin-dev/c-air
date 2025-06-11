@@ -1,6 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import "./FlightCard.css";
+import koreanAirLogo from "../koreanair.png"; // Import the logo image
 
 // Helper functions (formatDateTime, formatCurrency) remain the same...
 const formatDateTime = (isoString) => {
@@ -25,20 +26,24 @@ const formatCurrency = (amount) => {
 };
 
 const FlightCard = ({ flight }) => {
-  const navigate = useNavigate(); // Get the navigate function
+  const navigate = useNavigate();
 
-  // This function will be called when the "Select" button is clicked
   const handleSelect = () => {
-    // Navigate to the '/book' page and pass the flight object in the state
     navigate("/book", { state: { flight: flight } });
   };
 
   return (
     <div className="flight-card">
       <div className="airline-section">
-        <span className="airline-name">{flight.AIRLINE}</span>
+        {/* Replace the text with the image */}
+        <img
+          src={koreanAirLogo}
+          alt={flight.AIRLINE}
+          className="airline-logo"
+        />
       </div>
       <div className="details-section">
+        {/* ... (rest of the component is the same) ... */}
         <div className="time-info">
           <p className="time">
             {formatDateTime(flight.DEPARTUREDATETIME).split(" ")[4]}
