@@ -7,7 +7,8 @@ const db = require("./config/database");
 
 // --- Import Routes ---
 const authRoutes = require("./routes/authRoutes");
-const flightRoutes = require("./routes/flightRoutes"); // Import flight routes
+const flightRoutes = require("./routes/flightRoutes");
+const bookingRoutes = require("./routes/bookingRoutes"); // Import booking routes
 
 const app = express();
 
@@ -23,7 +24,8 @@ app.get("/", (req, res) => {
 
 // Register the application's routes
 app.use("/api/auth", authRoutes);
-app.use("/api/flights", flightRoutes); // Register flight routes
+app.use("/api/flights", flightRoutes);
+app.use("/api/bookings", bookingRoutes); // Register booking routes
 
 // === Server Initialization ===
 const PORT = process.env.PORT || 5000;
