@@ -31,8 +31,8 @@ const HistoryPage = () => {
     endDate: new Date().toISOString().split("T")[0],
   });
   const [groupedHistory, setGroupedHistory] = useState({
-    bookings: [],
-    cancellations: [],
+    bookings: {}, // Changed back to object for grouping
+    cancellations: {}, // Changed back to object for grouping
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -53,7 +53,6 @@ const HistoryPage = () => {
       historyService
         .getHistory(user.cno, dateRange)
         .then((data) => {
-          // Group the data after fetching
           const groupedBookings = groupHistoryByDate(
             data.bookings,
             "RESERVEDATETIME"
@@ -76,7 +75,6 @@ const HistoryPage = () => {
     }
   }, [user, dateRange]);
 
-  // This handler updates the date range state when an input changes
   const handleDateChange = (e) => {
     const { name, value } = e.target;
     setDateRange((prevRange) => ({
@@ -118,7 +116,11 @@ const HistoryPage = () => {
             <h2>예약 내역</h2>
             {Object.keys(groupedHistory.bookings).length > 0 ? (
               Object.entries(groupedHistory.bookings).map(([date, items]) => (
-                <div key={`booking-group-${date}`}>
+                // Add a new class to this container div
+                <div
+                  key={`booking-group-${date}`}
+                  className="history-date-group"
+                >
                   <p className="section-date">{date}</p>
                   {items.map((item) => (
                     <HistoryCard
@@ -139,7 +141,11 @@ const HistoryPage = () => {
             {Object.keys(groupedHistory.cancellations).length > 0 ? (
               Object.entries(groupedHistory.cancellations).map(
                 ([date, items]) => (
-                  <div key={`cancel-group-${date}`}>
+                  // Add a new class to this container div
+                  <div
+                    key={`cancel-group-${date}`}
+                    className="history-date-group"
+                  >
                     <p className="section-date">{date}</p>
                     {items.map((item) => (
                       <HistoryCard

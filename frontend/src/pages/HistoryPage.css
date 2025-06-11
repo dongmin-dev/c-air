@@ -48,7 +48,11 @@
   margin-top: 3rem;
 }
 
-/* These rules have been added */
+/* This is the new, more direct approach */
+.history-date-group {
+  margin-bottom: 2.5rem; /* Adds space BELOW each date group */
+}
+
 .history-section h2,
 .history-section .section-date {
   text-align: left;
@@ -58,11 +62,12 @@
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
+  margin-bottom: 1rem;
 }
 
 .history-section .section-date {
   font-size: 1.1rem;
   font-weight: 500;
   color: #495057;
-  margin: 2rem 0 1rem 0;
+  margin-bottom: 1rem;
 }
