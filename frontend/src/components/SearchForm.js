@@ -1,35 +1,76 @@
 import React from "react";
-
-// We will create this CSS file in the next step
 import "./SearchForm.css";
 
-const SearchForm = ({ params, onSearch }) => {
-  // For now, the inputs are not interactive. We are just building the layout.
-  // We will pass the 'params' and an 'onSearch' function as props from the parent page.
+const SearchForm = ({ params, setParams, onSearch }) => {
+  // This function handles changes for all input fields.
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setParams((prevParams) => ({
+      ...prevParams,
+      [name]: value,
+    }));
+  };
 
   return (
     <div className="search-form-wrapper">
-      <div className="search-form-container">
+      {/* We use a <form> tag to group the inputs */}
+      <form
+        className="search-form-container"
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSearch();
+        }}
+      >
         <div className="form-section">
-          <label>출발지</label>
-          <div className="form-value">서울/인천 (ICN)</div>
+          <label htmlFor="departureAirport">출발지</label>
+          <input
+            type="text"
+            id="departureAirport"
+            name="departureAirport"
+            className="form-input"
+            value={params.departureAirport}
+            onChange={handleChange}
+          />
         </div>
         <div className="form-section">
-          <label>도착지</label>
-          <div className="form-value">뉴욕/존 F. 케네디 (JFK)</div>
+          <label htmlFor="arrivalAirport">도착지</label>
+          <input
+            type="text"
+            id="arrivalAirport"
+            name="arrivalAirport"
+            className="form-input"
+            value={params.arrivalAirport}
+            onChange={handleChange}
+          />
         </div>
         <div className="form-section">
-          <label>출발날짜</label>
-          <div className="form-value">2025. 10. 10.</div>
+          <label htmlFor="departureDate">출발날짜</label>
+          <input
+            type="date"
+            id="departureDate"
+            name="departureDate"
+            className="form-input"
+            value={params.departureDate}
+            onChange={handleChange}
+          />
         </div>
         <div className="form-section">
-          <label>좌석등급</label>
-          <div className="form-value">전체</div>
+          <label htmlFor="seatClass">좌석등급</label>
+          <select
+            id="seatClass"
+            name="seatClass"
+            className="form-input"
+            value={params.seatClass}
+            onChange={handleChange}
+          >
+            <option value="ECONOMY">Economy</option>
+            <option value="BUSINESS">Business</option>
+          </select>
         </div>
-        <button className="search-action-button" onClick={onSearch}>
+        <button type="submit" className="search-action-button">
           검색하기
         </button>
-      </div>
+      </form>
     </div>
   );
 };
