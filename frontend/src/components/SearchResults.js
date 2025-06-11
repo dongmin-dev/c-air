@@ -1,9 +1,16 @@
 import React from "react";
-import FlightCard from "./FlightCard"; // Import our FlightCard component
-import "./SearchResults.css"; // We will create this next
+import FlightCard from "./FlightCard";
+import "./SearchResults.css";
 
-const SearchResults = ({ flights, isLoading, error, searchParams }) => {
-  // This function decides what content to show based on the current state.
+// The component now accepts sortBy and onSortChange as props
+const SearchResults = ({
+  flights,
+  isLoading,
+  error,
+  searchParams,
+  sortBy,
+  onSortChange,
+}) => {
   const renderContent = () => {
     if (isLoading) {
       return <div className="loading-message">Searching for flights...</div>;
@@ -13,7 +20,6 @@ const SearchResults = ({ flights, isLoading, error, searchParams }) => {
       return <div className="error-message-results">{error}</div>;
     }
 
-    // After a search is complete, if there are no flights, show a message.
     if (flights.length === 0) {
       return (
         <div className="no-results-message">
@@ -22,11 +28,9 @@ const SearchResults = ({ flights, isLoading, error, searchParams }) => {
       );
     }
 
-    // If we have flight data, display the results.
     return (
       <>
         <div className="results-header">
-          {/* Top summary bar from the prototype */}
           <div className="search-summary">
             {searchParams.departureAirport} - {searchParams.arrivalAirport}{" "}
             &middot; {searchParams.seatClass}
@@ -44,7 +48,12 @@ const SearchResults = ({ flights, isLoading, error, searchParams }) => {
         </div>
 
         <div className="sort-container">
-          <select className="sort-dropdown">
+          {/* The dropdown is now a controlled component */}
+          <select
+            className="sort-dropdown"
+            value={sortBy}
+            onChange={(e) => onSortChange(e.target.value)}
+          >
             <option value="price_asc">최저가순</option>
             <option value="time_asc">출발시간순</option>
           </select>

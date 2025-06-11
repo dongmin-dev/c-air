@@ -12,18 +12,17 @@ const SearchPage = () => {
     seatClass: "ECONOMY",
   });
 
-  // Add a new state for the sorting option
-  const [sortBy, setSortBy] = useState("price_asc"); // Default to 'price_asc'
+  const [sortBy, setSortBy] = useState("price_asc");
   const [flights, setFlights] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSearch = async () => {
+  // This function is now separate, can be called by search button OR sort change
+  const performSearch = async () => {
     setIsLoading(true);
     setError("");
-    setFlights(null);
+    // No longer setting flights to null, so the list doesn't disappear during sort
     try {
-      // Include the sortBy parameter in the search request
       const paramsWithSort = { ...searchParams, sortBy };
       const results = await flightService.searchFlights(paramsWithSort);
       setFlights(results);
@@ -34,6 +33,20 @@ const SearchPage = () => {
     }
   };
 
+  // This effect hook re-runs the search whenever 'sortBy' changes.
+  useEffect(() => {
+    // Only run the search if flights have been loaded at least once
+    if (flights !== null) {
+      performSearch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortBy]);
+
+  const handleSearchButtonClick = () => {
+    setFlights(null); // Clear previous results completely for a new search
+    performSearch();
+  };
+
   return (
     <div className="search-page">
       <div className="search-page-title-container">
@@ -42,7 +55,7 @@ const SearchPage = () => {
       <SearchForm
         params={searchParams}
         setParams={setSearchParams}
-        onSearch={handleSearch}
+        onSearch={handleSearchButtonClick}
       />
 
       {flights !== null && (
@@ -52,7 +65,7 @@ const SearchPage = () => {
           error={error}
           searchParams={searchParams}
           sortBy={sortBy}
-          onSortChange={setSortBy} // Pass the setter function to the child
+          onSortChange={setSortBy}
         />
       )}
     </div>
