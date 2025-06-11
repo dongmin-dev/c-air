@@ -1,9 +1,10 @@
 const db = require("./databaseService");
 
 const getBookingHistory = async (cno, startDate, endDate) => {
+  // The query has been simplified to remove the join to the CANCEL table.
   const sql = `
     SELECT
-      r.CNO, -- This was the missing field
+      r.CNO,
       r.RESERVEDATETIME,
       r.PAYMENT,
       a.AIRLINE,
@@ -15,12 +16,7 @@ const getBookingHistory = async (cno, startDate, endDate) => {
       r.SEATCLASS
     FROM RESERVE r
     JOIN AIRPLANE a ON r.FLIGHTNO = a.FLIGHTNO AND r.DEPARTUREDATETIME = a.DEPARTUREDATETIME
-    LEFT JOIN CANCEL c ON r.FLIGHTNO = c.FLIGHTNO 
-                      AND r.DEPARTUREDATETIME = c.DEPARTUREDATETIME 
-                      AND r.CNO = c.CNO 
-                      AND r.SEATCLASS = c.SEATCLASS
     WHERE r.CNO = :cno
-      AND c.CNO IS NULL
       AND TRUNC(r.RESERVEDATETIME) BETWEEN TO_DATE(:startDate, 'YYYY-MM-DD') AND TO_DATE(:endDate, 'YYYY-MM-DD')
     ORDER BY r.RESERVEDATETIME DESC
   `;
