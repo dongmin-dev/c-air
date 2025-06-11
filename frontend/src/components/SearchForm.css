@@ -1,0 +1,60 @@
+.search-form-wrapper {
+  /* Provides some spacing around the form */
+  padding: 2rem 0;
+}
+
+.search-form-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center; /* Vertically aligns items in the middle */
+  background-color: #fff;
+  border-radius: 16px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+}
+
+.form-section {
+  flex: 1; /* Each section will take up equal space */
+  padding: 1rem 1.5rem;
+  border-right: 1px solid #e9ecef; /* Vertical line separator */
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.form-section:hover {
+  background-color: #f8f9fa;
+}
+
+.form-section label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.form-section .form-value {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #212529;
+}
+
+.search-action-button {
+  background-color: #0d6efd; /* A vibrant blue */
+  color: white;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 1.75rem 2.5rem;
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  /* Removes the border from the last form section */
+  margin-left: -1px;
+}
+
+.search-action-button:hover {
+  background-color: #0b5ed7;
+}
