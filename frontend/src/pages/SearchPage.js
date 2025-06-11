@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import flightService from "../services/flightService";
 import SearchForm from "../components/SearchForm";
 import SearchResults from "../components/SearchResults";
@@ -17,19 +17,13 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // A single, robust search function
-  const handleSearch = async (currentSortBy = sortBy) => {
+  // This function is now separate, can be called by search button OR sort change
+  const performSearch = async () => {
     setIsLoading(true);
     setError("");
-
-    // If it's a new search from the button, clear results.
-    // If it's just a sort, the list won't disappear.
-    if (flights === null) {
-      setFlights([]);
-    }
-
+    // No longer setting flights to null, so the list doesn't disappear during sort
     try {
-      const paramsWithSort = { ...searchParams, sortBy: currentSortBy };
+      const paramsWithSort = { ...searchParams, sortBy };
       const results = await flightService.searchFlights(paramsWithSort);
       setFlights(results);
     } catch (err) {
@@ -39,18 +33,18 @@ const SearchPage = () => {
     }
   };
 
-  // This handler is for the sort dropdown
-  const handleSortChange = (newSortBy) => {
-    setSortBy(newSortBy);
-    // Trigger a search immediately with the new sort value
-    handleSearch(newSortBy);
-  };
+  // This effect hook re-runs the search whenever 'sortBy' changes.
+  useEffect(() => {
+    // Only run the search if flights have been loaded at least once
+    if (flights !== null) {
+      performSearch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortBy]);
 
-  // This handler is for the main search button
   const handleSearchButtonClick = () => {
-    setFlights(null); // Set to null to indicate a fresh search
-    // Use a timeout to ensure state is cleared before the new search begins
-    setTimeout(() => handleSearch(), 0);
+    setFlights(null); // Clear previous results completely for a new search
+    performSearch();
   };
 
   return (
@@ -71,7 +65,7 @@ const SearchPage = () => {
           error={error}
           searchParams={searchParams}
           sortBy={sortBy}
-          onSortChange={handleSortChange} // Use the new handler
+          onSortChange={setSortBy}
         />
       )}
     </div>
