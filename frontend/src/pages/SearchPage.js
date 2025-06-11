@@ -5,10 +5,22 @@ import SearchResults from "../components/SearchResults";
 import "./SearchPage.css";
 
 const SearchPage = () => {
+  const getFormattedLocalDate = () => {
+    const d = new Date();
+    // Get local date parts
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, "0"); // getMonth() is 0-indexed
+    const day = d.getDate().toString().padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
+    // Log the date being set for debugging
+    console.log(`[SearchPage] Initializing departureDate to: ${formattedDate}`);
+    return formattedDate;
+  };
+
   const [searchParams, setSearchParams] = useState({
     departureAirport: "ICN",
     arrivalAirport: "JFK",
-    departureDate: "2025-06-11",
+    departureDate: getFormattedLocalDate(), // Use local date formatted string
     seatClass: "ECONOMY",
   });
 
