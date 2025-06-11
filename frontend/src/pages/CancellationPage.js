@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import cancellationService from "../services/cancellationService";
-import "./CancellationPage.css"; // We will create this next
+import "./CancellationPage.css";
 import koreanAirLogo from "../koreanair.png";
 
 // Helper function to format currency
@@ -45,7 +45,6 @@ const CancellationPage = () => {
 
   const bookingItem = location.state?.bookingItem;
 
-  // Safeguard
   useEffect(() => {
     if (!bookingItem) {
       navigate("/history");
@@ -53,12 +52,13 @@ const CancellationPage = () => {
   }, [bookingItem, navigate]);
 
   const handleFinalCancel = async () => {
+    if (isCancelling) return;
     setIsCancelling(true);
+
     try {
-      // The backend needs the full original booking object to process the cancellation
       await cancellationService.createCancellation(bookingItem);
       alert("Cancellation successful!");
-      navigate("/history"); // Go back to the history page to see the change
+      navigate("/history");
     } catch (error) {
       alert(`Cancellation failed: ${error.message}`);
     } finally {
@@ -70,7 +70,6 @@ const CancellationPage = () => {
     return <div>Loading...</div>;
   }
 
-  // Calculate fees to display on the page
   const { fee, refund, daysUntilDeparture } = calculateRefund(bookingItem);
 
   return (
@@ -90,11 +89,30 @@ const CancellationPage = () => {
               <p className="route">
                 {bookingItem.DEPARTUREAIRPORT} → {bookingItem.ARRIVALAIRPORT}
               </p>
+              {/* This is the corrected line */}
               <p className="flight-meta">
                 {new Date(bookingItem.DEPARTUREDATETIME).toLocaleDateString(
                   "ko-KR"
                 )}{" "}
-                ...
+                (
+                {new Date(bookingItem.DEPARTUREDATETIME).toLocaleDateString(
+                  "ko-KR",
+                  { weekday: "short" }
+                )}
+                ){" "}
+                {new Date(bookingItem.DEPARTUREDATETIME).toLocaleTimeString(
+                  "ko-KR",
+                  { hour: "2-digit", minute: "2-digit", hour12: false }
+                )}
+                -
+                {new Date(bookingItem.ARRIVALDATETIME).toLocaleTimeString(
+                  "ko-KR",
+                  { hour: "2-digit", minute: "2-digit", hour12: false }
+                )}
+                {" · "}
+                {bookingItem.FLIGHTNO}
+                {" · "}
+                {bookingItem.SEATCLASS}
               </p>
             </div>
           </div>
