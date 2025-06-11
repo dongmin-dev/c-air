@@ -1,19 +1,12 @@
 const db = require("./databaseService");
 
-/**
- * Processes a flight cancellation.
- * @param {object} booking The original booking object to be canceled.
- * @returns {Promise<object>} A success or error message.
- */
+// createCancellation function remains the same
 const createCancellation = async (booking) => {
-  // --- 1. Calculate Cancellation Fee ---
   const departureDate = new Date(booking.DEPARTUREDATETIME);
-  const today = new Date(); // Use current date for calculation
-
+  const today = new Date();
   const diffTime =
     departureDate.setHours(0, 0, 0, 0) - today.setHours(0, 0, 0, 0);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
   let cancellationFee = 0;
   if (diffDays >= 15) {
     cancellationFee = 150000;
@@ -24,27 +17,21 @@ const createCancellation = async (booking) => {
   } else {
     cancellationFee = booking.PAYMENT;
   }
-
   const refundAmount = booking.PAYMENT - cancellationFee;
-
-  // --- 2. Start a Database Transaction ---
   const connection = await db.getConnectionForTransaction();
   try {
-    // --- 3. Insert into CANCEL table ---
     const insertCancelSql = `
       INSERT INTO CANCEL (flightNo, departureDateTime, seatClass, refund, cancelDateTime, cno)
       VALUES (:flightNo, :departureDateTime, :seatClass, :refund, SYSTIMESTAMP, :cno)
     `;
     const binds = {
       flightNo: booking.FLIGHTNO,
-      departureDateTime: new Date(booking.DEPARTUREDATETIME), // Using Date object
+      departureDateTime: new Date(booking.DEPARTUREDATETIME),
       seatClass: booking.SEATCLASS,
       refund: refundAmount,
       cno: booking.CNO,
     };
     await connection.execute(insertCancelSql, binds);
-
-    // --- 4. Delete from RESERVE table ---
     const deleteReserveSql = `
       DELETE FROM RESERVE
       WHERE flightNo = :flightNo
@@ -53,10 +40,7 @@ const createCancellation = async (booking) => {
       AND cno = :cno
     `;
     await connection.execute(deleteReserveSql, binds);
-
-    // --- 5. Commit the transaction ---
     await connection.commit();
-
     return { success: true, message: "Cancellation successful." };
   } catch (error) {
     await connection.rollback();
@@ -70,12 +54,8 @@ const createCancellation = async (booking) => {
 };
 
 /**
- * Fetches the full details of a single reservation to be displayed on the cancellation confirmation page.
- * @param {string} flightNo
- * @param {string} departureDateTime - The date string from the URL.
- * @param {string} seatClass
- * @param {string} cno
- * @returns {Promise<object>} The full booking record.
+ * Fetches the full details of a single reservation.
+ * THIS FUNCTION CONTAINS THE NEW FIX.
  */
 const getBookingDetails = async (
   flightNo,
@@ -83,6 +63,7 @@ const getBookingDetails = async (
   seatClass,
   cno
 ) => {
+  // We convert the database TIMESTAMP into a specific string format for comparison.
   const sql = `
       SELECT r.CNO, r.PAYMENT, r.RESERVEDATETIME,
              a.AIRLINE, a.FLIGHTNO, a.DEPARTUREDATETIME, a.DEPARTUREAIRPORT, 
@@ -90,13 +71,16 @@ const getBookingDetails = async (
       FROM RESERVE r
       JOIN AIRPLANE a ON r.flightNo = a.flightNo AND r.departureDateTime = a.departureDateTime
       WHERE r.flightNo = :flightNo
-      AND r.departureDateTime = :departureDateTime
+      -- This comparison is now string-to-string, which is more reliable
+      AND TO_CHAR(r.departureDateTime, 'YYYY-MM-DD"T"HH24:MI:SS') = SUBSTR(:departureDateTime, 1, 19)
       AND r.seatClass = :seatClass
       AND r.cno = :cno
     `;
+
+  // We bind the original string from the URL directly.
   const binds = {
     flightNo,
-    departureDateTime: new Date(departureDateTime), // Using Date object
+    departureDateTime,
     seatClass,
     cno,
   };
