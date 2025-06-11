@@ -21,7 +21,7 @@ async function searchFlights({
       a.FLIGHTNO,
       a.DEPARTUREDATETIME,
       a.DEPARTUREAIRPORT,
-      a.ARRIVEDATETIME,
+      a.arrivalDateTime, -- Corrected from a.ARRIVEDATETIME
       a.ARRIVALAIRPORT,
       s.SEATCLASS,
       s.PRICE,
