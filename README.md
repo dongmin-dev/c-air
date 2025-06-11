@@ -22,20 +22,6 @@ C-Air is a database term project developed during my junior year at Chungnam Nat
    cd c-air
    ```
 
-3. Build the project:
-
-   ```bash
-   make
-   ```
-
-## Usage
-
-Run the program using:
-
-```bash
-./c-air
-```
-
 ## Contributing
 
 Contributions are welcome! Please follow these steps:
