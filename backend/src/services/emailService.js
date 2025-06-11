@@ -119,7 +119,6 @@ const sendCancellationConfirmation = async (user, booking, refundAmount) => {
                   booking.DEPARTUREDATETIME
                 ).toLocaleString("en-US")}</td>
             </tr>
-            {/* This is the new row */}
             <tr>
                 <td style="padding: 8px; border: 1px solid #ddd;"><strong>Class</strong></td>
                 <td style="padding: 8px; border: 1px solid #ddd;">${
