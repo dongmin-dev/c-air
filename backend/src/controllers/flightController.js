@@ -7,8 +7,8 @@ const flightService = require("../services/flightService");
  */
 async function search(req, res) {
   // 1. Extract search parameters from the request query string
-  const { departureAirport, arrivalAirport, departureDate, seatClass } =
-    req.query;
+  const { departureAirport, arrivalAirport, departureDate, seatClass, sortBy } =
+    req.query; // Add sortBy here
 
   // 2. Basic validation to ensure all required parameters are present
   if (!departureAirport || !arrivalAirport || !departureDate || !seatClass) {
@@ -25,6 +25,7 @@ async function search(req, res) {
       arrivalAirport,
       departureDate,
       seatClass,
+      sortBy, // Pass sortBy to the service
     });
 
     // 4. Send the results back to the client
