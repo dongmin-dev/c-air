@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import flightService from "../services/flightService";
 import SearchForm from "../components/SearchForm";
-import SearchResults from "../components/SearchResults"; // Import the SearchResults component
+import SearchResults from "../components/SearchResults";
 import "./SearchPage.css";
 
 const SearchPage = () => {
@@ -12,16 +12,20 @@ const SearchPage = () => {
     seatClass: "ECONOMY",
   });
 
-  const [flights, setFlights] = useState(null); // Initialize as null to track initial state
+  // Add a new state for the sorting option
+  const [sortBy, setSortBy] = useState("price_asc"); // Default to 'price_asc'
+  const [flights, setFlights] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSearch = async () => {
     setIsLoading(true);
     setError("");
-    setFlights(null); // Clear previous results
+    setFlights(null);
     try {
-      const results = await flightService.searchFlights(searchParams);
+      // Include the sortBy parameter in the search request
+      const paramsWithSort = { ...searchParams, sortBy };
+      const results = await flightService.searchFlights(paramsWithSort);
       setFlights(results);
     } catch (err) {
       setError("Failed to fetch flights. Please try again later.");
@@ -41,13 +45,14 @@ const SearchPage = () => {
         onSearch={handleSearch}
       />
 
-      {/* Conditionally render SearchResults only if a search has been performed */}
       {flights !== null && (
         <SearchResults
           flights={flights}
           isLoading={isLoading}
           error={error}
           searchParams={searchParams}
+          sortBy={sortBy}
+          onSortChange={setSortBy} // Pass the setter function to the child
         />
       )}
     </div>
