@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import flightService from "../services/flightService";
 import SearchForm from "../components/SearchForm";
+import SearchResults from "../components/SearchResults"; // Import the SearchResults component
 import "./SearchPage.css";
 
 const SearchPage = () => {
@@ -11,18 +12,17 @@ const SearchPage = () => {
     seatClass: "ECONOMY",
   });
 
-  const [flights, setFlights] = useState([]);
+  const [flights, setFlights] = useState(null); // Initialize as null to track initial state
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSearch = async () => {
     setIsLoading(true);
     setError("");
-    console.log("Searching with params:", searchParams);
+    setFlights(null); // Clear previous results
     try {
       const results = await flightService.searchFlights(searchParams);
       setFlights(results);
-      console.log("Search results:", results);
     } catch (err) {
       setError("Failed to fetch flights. Please try again later.");
     } finally {
@@ -37,10 +37,19 @@ const SearchPage = () => {
       </div>
       <SearchForm
         params={searchParams}
-        setParams={setSearchParams} /* Pass the state setter function */
+        setParams={setSearchParams}
         onSearch={handleSearch}
       />
-      {/* We will add the <SearchResults /> component here in a later step */}
+
+      {/* Conditionally render SearchResults only if a search has been performed */}
+      {flights !== null && (
+        <SearchResults
+          flights={flights}
+          isLoading={isLoading}
+          error={error}
+          searchParams={searchParams}
+        />
+      )}
     </div>
   );
 };
