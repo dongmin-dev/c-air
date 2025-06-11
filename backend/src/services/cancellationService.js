@@ -38,7 +38,23 @@ const createCancellation = async (booking) => {
   // --- 2. Start a Database Transaction ---
   const connection = await db.getConnectionForTransaction();
   try {
-    // --- 3. Insert into CANCEL table ---
+    // --- 3. Delete any old cancellation record for this exact flight to prevent primary key violation.
+    const deleteOldCancelSql = `
+        DELETE FROM CANCEL
+        WHERE flightNo = :flightNo
+        AND departureDateTime = :departureDateTime
+        AND seatClass = :seatClass
+        AND cno = :cno
+    `;
+    const binds = {
+      flightNo: booking.FLIGHTNO,
+      departureDateTime: new Date(booking.DEPARTUREDATETIME),
+      seatClass: booking.SEATCLASS,
+      cno: booking.CNO,
+    };
+    await connection.execute(deleteOldCancelSql, binds);
+
+    // --- 4. Insert the new cancellation record.
     const insertCancelSql = `
       INSERT INTO CANCEL (flightNo, departureDateTime, seatClass, refund, cancelDateTime, cno)
       VALUES (:flightNo, :departureDateTime, :seatClass, :refund, SYSTIMESTAMP, :cno)
@@ -52,7 +68,7 @@ const createCancellation = async (booking) => {
     };
     await connection.execute(insertCancelSql, insertBinds);
 
-    // --- 4. Delete from RESERVE table ---
+    // --- 5. Delete the record from the RESERVE table.
     const deleteReserveSql = `
       DELETE FROM RESERVE
       WHERE flightNo = :flightNo
@@ -60,18 +76,12 @@ const createCancellation = async (booking) => {
       AND seatClass = :seatClass
       AND cno = :cno
     `;
-    const deleteBinds = {
-      flightNo: booking.FLIGHTNO,
-      departureDateTime: new Date(booking.DEPARTUREDATETIME),
-      seatClass: booking.SEATCLASS,
-      cno: booking.CNO,
-    };
-    await connection.execute(deleteReserveSql, deleteBinds);
+    await connection.execute(deleteReserveSql, binds); // We can reuse the first 'binds' object
 
-    // --- 5. Commit the transaction ---
+    // --- 6. Commit the transaction ---
     await connection.commit();
 
-    // --- 6. Send confirmation email after successful transaction ---
+    // --- 7. Send confirmation email after successful transaction ---
     emailService.sendCancellationConfirmation(user, booking, refundAmount);
 
     return { success: true, message: "Cancellation successful." };
