@@ -1,10 +1,8 @@
-# C-Air Project
+# C-Air
 
 ## Overview
 
-C-Air is a project designed to [briefly describe the purpose of your project]. It aims to [state the main goal or functionality of the project].
-
-## Features
+C-Air is a database term project developed during my junior year at Chungnam National University. It serves as a simple airline reservation management system, utilizing fundamental SQL operations to manage bookings, cancellations, and customer information efficiently.
 
 ## Features
 
