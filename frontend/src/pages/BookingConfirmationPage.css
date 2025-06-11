@@ -1,57 +1,107 @@
-/* Overall page container */
 .booking-page-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  padding-bottom: 120px; /* Add padding to the bottom to avoid content being hidden by the footer */
+  padding-bottom: 140px;
 }
 
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 2rem;
+  text-align: left;
 }
 
-/* Flex container for the two-column layout */
 .booking-content {
   display: flex;
   gap: 2rem;
   align-items: flex-start;
 }
 
-/* Left side card */
-.itinerary-details {
-  flex: 2; /* Takes up 2/3 of the space */
+.card-style {
   background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease;
 }
 
-.flight-info-header .airline-name {
-  font-weight: 600;
-  font-size: 1.2rem;
+.card-style:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-.flight-info-body .route {
-  font-size: 1.5rem;
+.itinerary-details {
+  flex: 2;
+}
+
+.fare-summary {
+  flex: 1;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 1.5rem;
+}
+
+.airline-logo-small {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+
+.flight-tags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.flight-route-detailed {
+  display: flex;
+  align-items: center;
+}
+
+.route-leg {
+  text-align: left;
+}
+
+.route-leg .airport-large {
+  font-size: 2rem;
   font-weight: 700;
-  margin: 1rem 0;
-}
-
-.flight-info-body .flight-meta {
-  font-size: 1rem;
-  color: #6c757d;
   margin: 0;
 }
 
-/* Right side card */
-.fare-summary {
-  flex: 1; /* Takes up 1/3 of the space */
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 1.5rem 2rem;
+.route-leg .leg-datetime {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0.25rem 0 0.75rem 0;
+}
+
+.route-line-detailed {
+  flex-grow: 1;
+  height: 1.5px;
+  background-color: #dee2e6;
+  margin: 0 1.5rem;
+  position: relative;
+  top: -10px;
+}
+
+.card-body .flight-meta,
+.card-body .route {
+  display: none;
 }
 
 .fare-summary h2 {
@@ -59,32 +109,55 @@
   font-weight: 600;
   margin-top: 0;
   margin-bottom: 1.5rem;
+  text-align: left;
 }
 
 .fare-summary hr {
   border: none;
-  border-top: 1px solid #e9ecef;
-  margin: 1rem 0;
+  border-top: 1px solid #f0f0f0;
+  margin: 1.5rem 0;
 }
 
-.fare-item,
+.fare-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.fare-flight-details {
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #868e96;
+}
+
+.fare-flight-details span {
+  margin-right: 0.25rem;
+}
+
+/* This rule is now consistent with the cancellation page */
 .fare-total {
   display: flex;
   justify-content: space-between;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 
-.fare-total {
+.fare-total .fare-label {
+  font-size: 1.2rem;
   font-weight: 700;
-  font-size: 1.1rem;
+  color: #212529;
 }
 
 .total-price {
   font-weight: 700;
+  color: #0d6efd;
 }
 
-/* Fixed footer at the bottom */
 .payment-footer {
   position: fixed;
   bottom: 0;
@@ -92,12 +165,20 @@
   width: 100%;
   background-color: #fff;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
-  padding: 1rem;
+  padding: 1.5rem 2rem;
   display: flex;
   justify-content: center;
 }
 
-.payment-footer .final-price-info {
+.payment-footer-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.final-price-info {
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -124,7 +205,6 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-left: 5rem;
 }
 
 .payment-button:hover {

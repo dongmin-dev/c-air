@@ -12,6 +12,22 @@ const formatCurrency = (amount) => {
   }).format(amount);
 };
 
+// Helper to format full date and time for the route section
+const formatRouteDateTime = (isoString) => {
+  const date = new Date(isoString);
+  const dateOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    weekday: "short",
+  };
+  const timeOptions = { hour: "2-digit", minute: "2-digit", hour12: false };
+  return `${date.toLocaleDateString(
+    "ko-KR",
+    dateOptions
+  )} ${date.toLocaleTimeString("en-GB", timeOptions)}`;
+};
+
 // Helper function to calculate cancellation fee and refund
 const calculateRefund = (booking) => {
   if (!booking) return { fee: 0, refund: 0, daysUntilDeparture: 0 };
@@ -77,46 +93,39 @@ const CancellationPage = () => {
       <h1 className="page-title">취소하는 예약 정보</h1>
       <div className="cancellation-content">
         <div className="cancellation-main">
-          <div className="itinerary-details">
-            <div className="flight-info-header">
+          <div className="itinerary-details card-style">
+            <div className="card-header">
               <img
                 src={koreanAirLogo}
                 alt={bookingItem.AIRLINE}
                 className="airline-logo-small"
               />
+              <div className="flight-tags">
+                <span className="tag">{bookingItem.FLIGHTNO}</span>
+                <span className="tag">{bookingItem.SEATCLASS}</span>
+              </div>
             </div>
-            <div className="flight-info-body">
-              <p className="route">
-                {bookingItem.DEPARTUREAIRPORT} → {bookingItem.ARRIVALAIRPORT}
-              </p>
-              {/* This is the corrected line */}
-              <p className="flight-meta">
-                {new Date(bookingItem.DEPARTUREDATETIME).toLocaleDateString(
-                  "ko-KR"
-                )}{" "}
-                (
-                {new Date(bookingItem.DEPARTUREDATETIME).toLocaleDateString(
-                  "ko-KR",
-                  { weekday: "short" }
-                )}
-                ){" "}
-                {new Date(bookingItem.DEPARTUREDATETIME).toLocaleTimeString(
-                  "ko-KR",
-                  { hour: "2-digit", minute: "2-digit", hour12: false }
-                )}
-                -
-                {new Date(bookingItem.ARRIVALDATETIME).toLocaleTimeString(
-                  "ko-KR",
-                  { hour: "2-digit", minute: "2-digit", hour12: false }
-                )}
-                {" · "}
-                {bookingItem.FLIGHTNO}
-                {" · "}
-                {bookingItem.SEATCLASS}
-              </p>
+            <div className="card-body">
+              <div className="flight-route-detailed">
+                <div className="route-leg">
+                  <p className="airport-large">
+                    {bookingItem.DEPARTUREAIRPORT}
+                  </p>
+                  <p className="leg-datetime">
+                    {formatRouteDateTime(bookingItem.DEPARTUREDATETIME)}
+                  </p>
+                </div>
+                <div className="route-line-detailed"></div>
+                <div className="route-leg">
+                  <p className="airport-large">{bookingItem.ARRIVALAIRPORT}</p>
+                  <p className="leg-datetime">
+                    {formatRouteDateTime(bookingItem.ARRIVALDATETIME)}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="cancellation-policy">
+          <div className="cancellation-policy card-style">
             <h2>위약금 정책</h2>
             <table>
               <thead>
@@ -138,37 +147,43 @@ const CancellationPage = () => {
             </table>
           </div>
         </div>
-        <div className="cancellation-summary">
+        <div className="cancellation-summary card-style">
           <h2>환불 예상 금액</h2>
-          <div className="fare-item">
-            <span>결제 요금</span>
-            <span>{formatCurrency(bookingItem.PAYMENT)}</span>
+          <div className="fare-row">
+            <span className="fare-label">결제 요금</span>
+            <span className="fare-value">
+              {formatCurrency(bookingItem.PAYMENT)}
+            </span>
           </div>
-          <div className="fare-item">
-            <span>
+          <div className="fare-row">
+            <span className="fare-label">
               위약금 <small>(출발 {daysUntilDeparture}일 전)</small>
             </span>
-            <span className="fee-amount">{formatCurrency(fee * -1)}</span>
+            <span className="fare-value fee-amount">
+              {formatCurrency(fee * -1)}
+            </span>
           </div>
           <hr />
           <div className="fare-total">
-            <span>총액</span>
+            <span className="fare-label">총액</span>
             <span className="total-price">{formatCurrency(refund)}</span>
           </div>
         </div>
       </div>
       <div className="payment-footer">
-        <div className="final-price-info">
-          <span>최종 환불 금액</span>
-          <span className="final-price">{formatCurrency(refund)}</span>
+        <div className="payment-footer-content">
+          <div className="final-price-info">
+            <span>최종 환불 금액</span>
+            <span className="final-price">{formatCurrency(refund)}</span>
+          </div>
+          <button
+            onClick={handleFinalCancel}
+            disabled={isCancelling}
+            className="payment-button cancel-final-button"
+          >
+            {isCancelling ? "취소 처리 중..." : "취소하기"}
+          </button>
         </div>
-        <button
-          onClick={handleFinalCancel}
-          disabled={isCancelling}
-          className="payment-button cancel-final-button"
-        >
-          {isCancelling ? "취소 처리 중..." : "취소하기"}
-        </button>
       </div>
     </div>
   );

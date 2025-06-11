@@ -2,13 +2,14 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  padding-bottom: 120px; /* Space for the fixed footer */
+  padding-bottom: 140px;
 }
 
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
   margin-bottom: 2rem;
+  text-align: left;
 }
 
 .cancellation-content {
@@ -17,7 +18,6 @@
   align-items: flex-start;
 }
 
-/* Left side of the page */
 .cancellation-main {
   flex: 2;
   display: flex;
@@ -25,35 +25,84 @@
   gap: 2rem;
 }
 
-/* Right side of the page */
-.cancellation-summary {
-  flex: 1;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 1.5rem 2rem;
-}
-
-/* Re-using styles from booking confirmation where applicable */
+.cancellation-summary,
+.cancellation-policy,
 .itinerary-details {
   background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease;
+}
+.cancellation-summary:hover,
+.cancellation-policy:hover,
+.itinerary-details:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.cancellation-summary {
+  flex: 1;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 1.5rem;
 }
 
 .airline-logo-small {
-  height: 20px;
+  height: 22px;
   width: auto;
   display: block;
 }
 
-/* Cancellation Policy Table */
-.cancellation-policy {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 1.5rem 2rem;
+.flight-tags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.flight-route-detailed {
+  display: flex;
+  align-items: center;
+}
+
+.route-leg {
+  text-align: left;
+}
+
+.route-leg .airport-large {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.route-leg .leg-datetime {
+  font-size: 1rem;
+  color: #6c757d;
+  margin: 0.25rem 0 0.75rem 0;
+}
+
+.route-line-detailed {
+  flex-grow: 1;
+  height: 1.5px;
+  background-color: #dee2e6;
+  margin: 0 1.5rem;
+  position: relative;
+  top: -10px;
 }
 
 .cancellation-policy h2,
@@ -62,6 +111,7 @@
   font-weight: 600;
   margin-top: 0;
   margin-bottom: 1.5rem;
+  text-align: left;
 }
 
 .cancellation-policy table {
@@ -82,14 +132,119 @@
   font-weight: 500;
 }
 
-/* Fee amount in the summary */
-.fee-amount {
-  color: #dc3545;
+.fare-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
-/* Fixed footer button */
+.fare-label {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #6c757d;
+}
+
+.fare-label small {
+  font-size: 0.85rem;
+}
+
+.fare-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #343a40;
+}
+
+.fee-amount {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+.cancellation-summary hr {
+  border: none;
+  border-top: 1px solid #f0f0f0;
+  margin: 1rem 0;
+}
+
+.fare-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.fare-total .fare-label {
+  color: #212529;
+  font-weight: 700;
+  font-size: 1.4rem; /* Ensure it inherits the container's font size */
+}
+
+.cancellation-summary .total-price {
+  color: #212529;
+}
+
+/* Reusing footer styles from booking page */
+.payment-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.payment-footer-content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.final-price-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.final-price-info span {
+  font-size: 1.2rem;
+  color: #495057;
+}
+
+.final-price-info .final-price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+.payment-button {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.payment-button:hover {
+  background-color: #0b5ed7;
+}
+
+.payment-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
 .cancel-final-button {
-  background-color: #dc3545; /* Red color for cancellation */
+  background-color: #dc3545;
 }
 
 .cancel-final-button:hover {
