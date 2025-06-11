@@ -3,7 +3,7 @@ import historyService from "../services/historyService";
 import HistoryCard from "../components/HistoryCard";
 import "./HistoryPage.css";
 
-// New helper function to group history items by date
+// Helper function to group history items by date
 const groupHistoryByDate = (items, dateField) => {
   if (!items) return {};
 
@@ -24,17 +24,20 @@ const groupHistoryByDate = (items, dateField) => {
 const HistoryPage = () => {
   const [user, setUser] = useState(null);
   const [dateRange, setDateRange] = useState({
-    startDate: "2025-05-01",
-    endDate: "2025-06-30",
+    // Default to a 30-day range ending today
+    startDate: new Date(new Date().setDate(new Date().getDate() - 29))
+      .toISOString()
+      .split("T")[0],
+    endDate: new Date().toISOString().split("T")[0],
   });
-  // This state will now hold the grouped data
   const [groupedHistory, setGroupedHistory] = useState({
-    bookings: {},
-    cancellations: {},
+    bookings: [],
+    cancellations: [],
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Get the logged-in user when the component loads
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -42,6 +45,7 @@ const HistoryPage = () => {
     }
   }, []);
 
+  // Fetch history when the user or date range changes
   useEffect(() => {
     if (user) {
       setIsLoading(true);
@@ -72,14 +76,35 @@ const HistoryPage = () => {
     }
   }, [user, dateRange]);
 
+  // This handler updates the date range state when an input changes
+  const handleDateChange = (e) => {
+    const { name, value } = e.target;
+    setDateRange((prevRange) => ({
+      ...prevRange,
+      [name]: value,
+    }));
+  };
+
   return (
     <div className="history-page-container">
       <div className="history-header">
-        <div className="date-picker-placeholder">
-          <span className="calendar-icon">📅</span>
-          <span>
-            {dateRange.startDate} ~ {dateRange.endDate}
-          </span>
+        <h1 className="page-title">내역</h1>
+        <div className="date-picker-container">
+          <input
+            type="date"
+            name="startDate"
+            value={dateRange.startDate}
+            onChange={handleDateChange}
+            className="date-input"
+          />
+          <span className="date-separator">~</span>
+          <input
+            type="date"
+            name="endDate"
+            value={dateRange.endDate}
+            onChange={handleDateChange}
+            className="date-input"
+          />
         </div>
       </div>
 

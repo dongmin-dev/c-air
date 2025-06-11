@@ -6,27 +6,46 @@
 
 .history-header {
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.05rem;
 }
 
-/* This is a placeholder style for the date picker from the prototype */
-.date-picker-placeholder {
-  display: inline-flex; /* Use inline-flex to keep it from taking full width */
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.date-picker-container {
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.25rem;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
   border: 1px solid #ced4da;
   border-radius: 8px;
   background-color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
 }
 
-.calendar-icon {
-  font-size: 1.2rem;
+.date-input {
+  border: none;
+  background: transparent;
+  color: #495057;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.date-input:focus {
+  outline: none;
+}
+
+.date-separator {
+  color: #6c757d;
 }
 
 .history-section {
-  margin-top: 3rem; /* Space between booking and cancellation sections */
+  margin-top: 3rem;
 }
 
 .history-section h2 {
