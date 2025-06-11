@@ -15,11 +15,12 @@ const HistoryCard = ({ item, type }) => {
   const navigate = useNavigate();
   const displayAmount = type === "booking" ? item.PAYMENT : item.REFUND;
 
-  // This function will be called when the "Cancel" button is clicked
   const handleCancelClick = () => {
-    // Navigate to the '/cancel' page and pass the entire booking item in the state
     navigate("/cancel", { state: { bookingItem: item } });
   };
+
+  // --- New Logic to Check if Flight has Departed ---
+  const hasDeparted = new Date(item.DEPARTUREDATETIME) < new Date();
 
   return (
     <div className="history-card">
@@ -55,9 +56,18 @@ const HistoryCard = ({ item, type }) => {
       </div>
       <div className="history-card-right">
         <p className="history-amount">{formatCurrency(displayAmount)}</p>
-        {/* Conditionally render the cancel button only for booking history */}
         {type === "booking" && (
-          <button className="cancel-button" onClick={handleCancelClick}>
+          // Add the 'disabled' attribute to the button based on the check
+          <button
+            className="cancel-button"
+            onClick={handleCancelClick}
+            disabled={hasDeparted}
+            title={
+              hasDeparted
+                ? "This flight has already departed."
+                : "Cancel this booking"
+            }
+          >
             취소하기
           </button>
         )}
