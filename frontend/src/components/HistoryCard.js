@@ -1,6 +1,7 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./HistoryCard.css";
-import koreanAirLogo from "../koreanair.png"; // Import the logo image
+import koreanAirLogo from "../koreanair.png";
 
 // Helper function to format currency
 const formatCurrency = (amount) => {
@@ -11,16 +12,21 @@ const formatCurrency = (amount) => {
 };
 
 const HistoryCard = ({ item, type }) => {
+  const navigate = useNavigate();
   const displayAmount = type === "booking" ? item.PAYMENT : item.REFUND;
+
+  // This function will be called when the "Cancel" button is clicked
+  const handleCancelClick = () => {
+    // Navigate to the '/cancel' page and pass the entire booking item in the state
+    navigate("/cancel", { state: { bookingItem: item } });
+  };
 
   return (
     <div className="history-card">
       <div className="history-card-left">
-        {/* Replace the text with the image */}
         <img src={koreanAirLogo} alt={item.AIRLINE} className="airline-logo" />
       </div>
       <div className="history-card-center">
-        {/* ... (rest of the component is the same) ... */}
         <p className="route">
           {item.DEPARTUREAIRPORT} → {item.ARRIVALAIRPORT}
         </p>
@@ -49,8 +55,11 @@ const HistoryCard = ({ item, type }) => {
       </div>
       <div className="history-card-right">
         <p className="history-amount">{formatCurrency(displayAmount)}</p>
+        {/* Conditionally render the cancel button only for booking history */}
         {type === "booking" && (
-          <button className="cancel-button">취소하기</button>
+          <button className="cancel-button" onClick={handleCancelClick}>
+            취소하기
+          </button>
         )}
       </div>
     </div>
