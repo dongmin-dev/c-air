@@ -74,7 +74,6 @@ const sendBookingConfirmation = async (user, flight) => {
     attachments: [
       {
         filename: "CAIR-Logo-blue.png",
-        // This path now correctly navigates up one directory '..' to find the logo
         path: path.join(__dirname, "..", "CAIR-Logo-blue.png"),
         cid: "logo",
       },
@@ -120,6 +119,13 @@ const sendCancellationConfirmation = async (user, booking, refundAmount) => {
                   booking.DEPARTUREDATETIME
                 ).toLocaleString("en-US")}</td>
             </tr>
+            {/* This is the new row */}
+            <tr>
+                <td style="padding: 8px; border: 1px solid #ddd;"><strong>Class</strong></td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${
+                  booking.SEATCLASS
+                }</td>
+            </tr>
         </table>
         <br>
         <h3>Refund Details</h3>
@@ -146,7 +152,6 @@ const sendCancellationConfirmation = async (user, booking, refundAmount) => {
     attachments: [
       {
         filename: "CAIR-Logo-blue.png",
-        // This path now correctly navigates up one directory '..' to find the logo
         path: path.join(__dirname, "..", "CAIR-Logo-blue.png"),
         cid: "logo",
       },
