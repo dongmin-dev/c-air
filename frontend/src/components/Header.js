@@ -1,15 +1,13 @@
-import React from "react"; // No longer need useState or useEffect here
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../CAIR-Logo-blue.png";
 import "./Header.css";
 
-// The component now receives 'user' and 'setUser' as props
 const Header = ({ user, setUser }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    // Update the state in the top-level App component
     setUser(null);
     navigate("/");
   };
@@ -30,6 +28,12 @@ const Header = ({ user, setUser }) => {
             <Link to="/history" className="nav-link">
               내역 조회
             </Link>
+            {/* Conditionally render the Admin link */}
+            {user && user.cno === "cO" && (
+              <Link to="/admin/stats" className="nav-link admin-link">
+                Admin
+              </Link>
+            )}
           </nav>
         </div>
         <div className="header-right">
