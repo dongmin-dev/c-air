@@ -12,8 +12,9 @@ import SearchPage from "./pages/SearchPage";
 import BookingConfirmationPage from "./pages/BookingConfirmationPage";
 import HistoryPage from "./pages/HistoryPage";
 import CancellationPage from "./pages/CancellationPage";
-import AdminStatsPage from "./pages/AdminStatsPage"; // Import the new page
+import AdminStatsPage from "./pages/AdminStatsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute"; // Import the new AdminRoute
 import "./App.css";
 
 function App() {
@@ -74,13 +75,13 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* Add the protected route for the admin page */}
+            {/* Use the new AdminRoute to protect the admin page */}
             <Route
               path="/admin/stats"
               element={
-                <ProtectedRoute>
+                <AdminRoute>
                   <AdminStatsPage />
-                </ProtectedRoute>
+                </AdminRoute>
               }
             />
           </Routes>

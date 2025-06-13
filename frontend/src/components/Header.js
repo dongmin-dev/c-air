@@ -28,10 +28,9 @@ const Header = ({ user, setUser }) => {
             <Link to="/history" className="nav-link">
               내역 조회
             </Link>
-            {/* Conditionally render the Admin link */}
-            {user && user.cno === "cO" && (
+            {user && user.cno.toUpperCase() === "C0" && (
               <Link to="/admin/stats" className="nav-link admin-link">
-                Admin
+                관리자 통계 페이지
               </Link>
             )}
           </nav>
