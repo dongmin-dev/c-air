@@ -28,6 +28,7 @@ const Header = ({ user, setUser }) => {
             <Link to="/history" className="nav-link">
               내역 조회
             </Link>
+            {/* This is the updated link text */}
             {user && user.cno.toUpperCase() === "C0" && (
               <Link to="/admin/stats" className="nav-link admin-link">
                 관리자 통계 페이지
