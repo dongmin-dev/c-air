@@ -10,7 +10,8 @@ const authRoutes = require("./routes/authRoutes");
 const flightRoutes = require("./routes/flightRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const historyRoutes = require("./routes/historyRoutes");
-const cancellationRoutes = require("./routes/cancellationRoutes"); // Import cancellation routes
+const cancellationRoutes = require("./routes/cancellationRoutes");
+const statsRoutes = require("./routes/statsRoutes"); // Import stats routes
 
 const app = express();
 
@@ -29,7 +30,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/flights", flightRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/history", historyRoutes);
-app.use("/api/cancellations", cancellationRoutes); // Register cancellation routes
+app.use("/api/cancellations", cancellationRoutes);
+app.use("/api/stats", statsRoutes); // Register stats routes
 
 // === Server Initialization ===
 const PORT = process.env.PORT || 5000;
