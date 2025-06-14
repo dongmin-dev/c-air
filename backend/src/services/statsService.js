@@ -1,21 +1,21 @@
 const db = require("./databaseService");
 
 /**
- * Fetches booking statistics, grouped by flight route with subtotals and grand totals.
+ * Fetches booking statistics, grouped by Airline and Seat Class with subtotals.
  * Uses the CUBE function.
  * @returns {Promise<Array>}
  */
-const getRouteStatistics = async () => {
+const getBookingSummaryStats = async () => {
   const sql = `
     SELECT 
-      a.DEPARTUREAIRPORT, 
-      a.ARRIVALAIRPORT, 
-      COUNT(r.cno) AS TOTAL_BOOKINGS, 
+      a.AIRLINE, 
+      r.SEATCLASS, 
+      COUNT(*) AS TOTAL_BOOKINGS, 
       SUM(r.PAYMENT) AS TOTAL_REVENUE
     FROM RESERVE r
     JOIN AIRPLANE a ON r.FLIGHTNO = a.FLIGHTNO AND r.DEPARTUREDATETIME = a.DEPARTUREDATETIME
-    GROUP BY CUBE(a.DEPARTUREAIRPORT, a.ARRIVALAIRPORT)
-    ORDER BY a.DEPARTUREAIRPORT, a.ARRIVALAIRPORT
+    GROUP BY CUBE(a.AIRLINE, r.SEATCLASS)
+    ORDER BY a.AIRLINE, r.SEATCLASS
   `;
   const result = await db.execute(sql);
   return result.rows;
@@ -51,6 +51,6 @@ const getCustomerRanking = async () => {
 };
 
 module.exports = {
-  getRouteStatistics,
+  getBookingSummaryStats, // Renamed for clarity
   getCustomerRanking,
 };

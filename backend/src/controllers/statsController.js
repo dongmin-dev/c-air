@@ -8,13 +8,14 @@ const statsService = require("../services/statsService");
 const getAdminStats = async (req, res) => {
   try {
     // Fetch both sets of statistics in parallel for efficiency
-    const [routeStats, customerRanking] = await Promise.all([
-      statsService.getRouteStatistics(),
+    const [bookingSummary, customerRanking] = await Promise.all([
+      // This function call has been corrected
+      statsService.getBookingSummaryStats(),
       statsService.getCustomerRanking(),
     ]);
 
-    // Send both sets of data back in a single response object
-    res.status(200).json({ routeStats, customerRanking });
+    // Send both lists back in a single response object
+    res.status(200).json({ bookingSummary, customerRanking });
   } catch (error) {
     console.error("Admin Stats Controller Error:", error);
     res

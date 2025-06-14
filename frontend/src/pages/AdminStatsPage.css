@@ -1,0 +1,71 @@
+.admin-page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.stats-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.stats-card {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.stats-card h2 {
+  font-size: 1.8rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.stats-card p {
+  color: #6c757d;
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.table-container {
+  overflow-x: auto; /* Allow horizontal scrolling on small screens */
+}
+
+.stats-card table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.stats-card th,
+.stats-card td {
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.stats-card th {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  background-color: #f8f9fa;
+}
+
+.stats-card tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Special styles for the CUBE summary rows */
+.stats-card .sub-total td {
+  font-weight: 700;
+  background-color: #f1f3f5;
+}
+
+.stats-card .grand-total td {
+  font-weight: 700;
+  background-color: #e9ecef;
+  border-top: 2px solid #adb5bd;
+}
