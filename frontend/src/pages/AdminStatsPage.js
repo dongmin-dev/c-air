@@ -44,7 +44,7 @@ const AdminStatsPage = () => {
       ) : (
         <div className="stats-content">
           <div className="stats-card">
-            <h2>항공사 및 좌석 등급별 통계 (CUBE)</h2>
+            <h2>항공사 및 좌석 등급별 통계</h2>
             <p>
               항공사/좌석 등급별 총 예약 수와 매출을 보여줍니다. 빈 값은 소계
               또는 총계를 의미합니다.
