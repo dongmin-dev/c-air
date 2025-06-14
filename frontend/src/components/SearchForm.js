@@ -1,8 +1,7 @@
 import React from "react";
 import "./SearchForm.css";
 
-const SearchForm = ({ params, setParams, onSearch }) => {
-  // This function handles changes for all input fields.
+const SearchForm = ({ params, setParams, onSearch, airports }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setParams((prevParams) => ({
@@ -22,25 +21,37 @@ const SearchForm = ({ params, setParams, onSearch }) => {
       >
         <div className="form-section">
           <label htmlFor="departureAirport">출발지</label>
-          <input
-            type="text"
+          {/* Replace input with a select dropdown */}
+          <select
             id="departureAirport"
             name="departureAirport"
             className="form-input"
             value={params.departureAirport}
             onChange={handleChange}
-          />
+          >
+            {airports.map((airport) => (
+              <option key={`dep-${airport}`} value={airport}>
+                {airport}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-section">
           <label htmlFor="arrivalAirport">도착지</label>
-          <input
-            type="text"
+          {/* Replace input with a select dropdown */}
+          <select
             id="arrivalAirport"
             name="arrivalAirport"
             className="form-input"
             value={params.arrivalAirport}
             onChange={handleChange}
-          />
+          >
+            {airports.map((airport) => (
+              <option key={`arr-${airport}`} value={airport}>
+                {airport}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-section">
           <label htmlFor="departureDate">출발날짜</label>
