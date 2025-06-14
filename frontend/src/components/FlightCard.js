@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./FlightCard.css";
-import koreanAirLogo from "../koreanair.png";
+import { getAirlineLogo } from "../services/logoService"; // Import the new logo service function
 
 // Helper function to format the date and time
 const formatDateTime = (isoString) => {
@@ -33,17 +33,15 @@ const FlightCard = ({ flight }) => {
     navigate("/book", { state: { flight: flight } });
   };
 
-  // --- New and Updated Logic ---
   const isSoldOut = flight.REMAINING_SEATS <= 0;
   const hasDeparted = new Date(flight.DEPARTUREDATETIME) < new Date();
 
-  // Helper to determine the button text and title
   const getButtonState = () => {
     if (isSoldOut) {
       return { text: "매진", title: "This flight is sold out" };
     }
     if (hasDeparted) {
-      return { text: "예약 불가", title: "This flight has already departed" };
+      return { text: "출발 완료", title: "This flight has already departed" };
     }
     return { text: "선택하기 →", title: "Select this flight" };
   };
@@ -53,8 +51,9 @@ const FlightCard = ({ flight }) => {
   return (
     <div className="flight-card">
       <div className="airline-section">
+        {/* Use the new function to get the correct logo */}
         <img
-          src={koreanAirLogo}
+          src={getAirlineLogo(flight.AIRLINE)}
           alt={flight.AIRLINE}
           className="airline-logo"
         />
