@@ -55,6 +55,10 @@ C-Air is a database term project developed during my junior year at Chungnam Nat
    npm run dev
    ```
 
+## Demo
+
+You can view a live demo of the project at [c-air.betaplay.live](https://c-air.betaplay.live/)
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps:
