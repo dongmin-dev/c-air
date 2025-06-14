@@ -14,7 +14,8 @@ import HistoryPage from "./pages/HistoryPage";
 import CancellationPage from "./pages/CancellationPage";
 import AdminStatsPage from "./pages/AdminStatsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
-import AdminRoute from "./components/AdminRoute"; // Import the new AdminRoute
+import AdminRoute from "./components/AdminRoute";
+import FloatingGitHubLink from "./components/FloatingGitHubLink"; // Import the new component
 import "./App.css";
 
 function App() {
@@ -75,7 +76,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* Use the new AdminRoute to protect the admin page */}
             <Route
               path="/admin/stats"
               element={
@@ -86,6 +86,7 @@ function App() {
             />
           </Routes>
         </main>
+        <FloatingGitHubLink /> {/* Add the floating button component here */}
       </div>
     </Router>
   );
