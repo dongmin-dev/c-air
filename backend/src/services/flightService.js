@@ -17,7 +17,6 @@ async function searchFlights({
   seatClass,
   sortBy,
 }) {
-  // Base SQL query without the ORDER BY clause
   let sql = `
     SELECT
       a.AIRLINE,
@@ -44,7 +43,6 @@ async function searchFlights({
       AND (s.NO_OF_SEATS - NVL(r.RESERVED_COUNT, 0)) > 0
   `;
 
-  // Dynamically add the ORDER BY clause based on the sortBy parameter
   switch (sortBy) {
     case "time_asc":
       sql += ` ORDER BY a.DEPARTUREDATETIME ASC`;
@@ -71,6 +69,24 @@ async function searchFlights({
   }
 }
 
+/**
+ * Fetches a distinct list of all airport codes from the database.
+ * @returns {Promise<Array>} A list of airport code objects.
+ */
+const getAirportList = async () => {
+  const sql = `
+    SELECT airport_code FROM (
+      SELECT DEPARTUREAIRPORT AS airport_code FROM AIRPLANE
+      UNION
+      SELECT ARRIVALAIRPORT AS airport_code FROM AIRPLANE
+    )
+    ORDER BY airport_code ASC
+  `;
+  const result = await db.execute(sql);
+  return result.rows.map((row) => row.AIRPORT_CODE);
+};
+
 module.exports = {
   searchFlights,
+  getAirportList,
 };

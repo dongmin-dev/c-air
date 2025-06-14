@@ -3,8 +3,10 @@ const router = express.Router();
 
 const flightController = require("../controllers/flightController");
 
-// Define the flight search route
-// When a GET request is made to /api/flights/search, the flightController.search function will be executed.
+// Existing search route
 router.get("/search", flightController.search);
+
+// New route to get the list of airports
+router.get("/airports", flightController.getAirports);
 
 module.exports = router;

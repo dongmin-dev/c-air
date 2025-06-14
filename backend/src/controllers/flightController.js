@@ -5,12 +5,10 @@ const flightService = require("../services/flightService");
  * @param {object} req The Express request object.
  * @param {object} res The Express response object.
  */
-async function search(req, res) {
-  // 1. Extract search parameters from the request query string
-  const { departureAirport, arrivalAirport, departureDate, seatClass, sortBy } =
-    req.query; // Add sortBy here
+const search = async (req, res) => {
+  const { departureAirport, arrivalAirport, departureDate, seatClass } =
+    req.query;
 
-  // 2. Basic validation to ensure all required parameters are present
   if (!departureAirport || !arrivalAirport || !departureDate || !seatClass) {
     return res.status(400).json({
       message:
@@ -19,26 +17,34 @@ async function search(req, res) {
   }
 
   try {
-    // 3. Call the service layer to perform the search
-    const flights = await flightService.searchFlights({
-      departureAirport,
-      arrivalAirport,
-      departureDate,
-      seatClass,
-      sortBy, // Pass sortBy to the service
-    });
-
-    // 4. Send the results back to the client
+    const flights = await flightService.searchFlights(req.query);
     res.status(200).json(flights);
   } catch (error) {
-    // 5. Handle any unexpected errors from the service layer
     console.error("Flight Search Controller Error:", error);
     res
       .status(500)
       .json({ message: "An error occurred while searching for flights." });
   }
-}
+};
+
+/**
+ * Handles the request to get the list of all airports.
+ * @param {object} req The Express request object.
+ * @param {object} res The Express response object.
+ */
+const getAirports = async (req, res) => {
+  try {
+    const airports = await flightService.getAirportList();
+    res.status(200).json(airports);
+  } catch (error) {
+    console.error("Get Airports Controller Error:", error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching the airport list." });
+  }
+};
 
 module.exports = {
   search,
+  getAirports,
 };
