@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import bookingService from "../services/bookingService";
 import "./BookingConfirmationPage.css";
-import koreanAirLogo from "../koreanair.png";
+import { getAirlineLogo } from "../services/logoService"; // Import the new logo service function
 
 // Helper function to format currency
 const formatCurrency = (amount) => {
@@ -76,8 +76,9 @@ const BookingConfirmationPage = () => {
       <div className="booking-content">
         <div className="itinerary-details card-style">
           <div className="card-header">
+            {/* Use the new function to get the correct logo */}
             <img
-              src={koreanAirLogo}
+              src={getAirlineLogo(flight.AIRLINE)}
               alt={flight.AIRLINE}
               className="airline-logo-small"
             />
