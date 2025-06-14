@@ -2,7 +2,7 @@ import React from "react";
 import FlightCard from "./FlightCard";
 import "./SearchResults.css";
 
-// The component now accepts sortBy and onSortChange as props
+// The component now accepts 'onDateChange' as a prop
 const SearchResults = ({
   flights,
   isLoading,
@@ -10,6 +10,7 @@ const SearchResults = ({
   searchParams,
   sortBy,
   onSortChange,
+  onDateChange,
 }) => {
   const renderContent = () => {
     if (isLoading) {
@@ -36,19 +37,23 @@ const SearchResults = ({
             &middot; {searchParams.seatClass}
           </div>
           <div className="date-navigator">
-            <button className="nav-arrow">&lt;</button>
+            {/* The arrow buttons are now functional */}
+            <button className="nav-arrow" onClick={() => onDateChange(-1)}>
+              &lt;
+            </button>
             <span className="current-date">
               {new Date(searchParams.departureDate).toLocaleDateString(
                 "ko-KR",
                 { month: "long", day: "numeric", weekday: "short" }
               )}
             </span>
-            <button className="nav-arrow">&gt;</button>
+            <button className="nav-arrow" onClick={() => onDateChange(1)}>
+              &gt;
+            </button>
           </div>
         </div>
 
         <div className="sort-container">
-          {/* The dropdown is now a controlled component */}
           <select
             className="sort-dropdown"
             value={sortBy}
