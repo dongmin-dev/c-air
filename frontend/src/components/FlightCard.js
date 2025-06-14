@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./FlightCard.css";
-import koreanAirLogo from "../koreanair.png"; // Import the logo image
+import koreanAirLogo from "../koreanair.png";
 
-// Helper functions (formatDateTime, formatCurrency) remain the same...
+// Helper function to format the date and time
 const formatDateTime = (isoString) => {
   const date = new Date(isoString);
   const options = {
@@ -18,6 +18,7 @@ const formatDateTime = (isoString) => {
   return new Intl.DateTimeFormat("ko-KR", options).format(date);
 };
 
+// Helper function to format currency
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat("ko-KR", {
     style: "currency",
@@ -32,12 +33,12 @@ const FlightCard = ({ flight }) => {
     navigate("/book", { state: { flight: flight } });
   };
 
-  const hasDeparted = new Date(flight.DEPARTUREDATETIME) < new Date();
+  // Check if the flight is sold out
+  const isSoldOut = flight.REMAINING_SEATS <= 0;
 
   return (
     <div className="flight-card">
       <div className="airline-section">
-        {/* Replace the text with the image */}
         <img
           src={koreanAirLogo}
           alt={flight.AIRLINE}
@@ -45,7 +46,6 @@ const FlightCard = ({ flight }) => {
         />
       </div>
       <div className="details-section">
-        {/* ... (rest of the component is the same) ... */}
         <div className="time-info">
           <p className="time">
             {formatDateTime(flight.DEPARTUREDATETIME).split(" ")[4]}
@@ -60,16 +60,19 @@ const FlightCard = ({ flight }) => {
           <p className="airport-code">{flight.ARRIVALAIRPORT}</p>
         </div>
       </div>
-      <div className="seats-section">잔여좌석 {flight.REMAINING_SEATS}석</div>
+      <div className="seats-section">
+        {isSoldOut ? "매진" : `잔여좌석 ${flight.REMAINING_SEATS}석`}
+      </div>
       <div className="pricing-section">
         <p className="flight-number">{flight.FLIGHTNO}</p>
         <p className="price">{formatCurrency(flight.PRICE)}</p>
         <button
           className="select-button"
           onClick={handleSelect}
-          disabled={hasDeparted}
+          disabled={isSoldOut}
+          title={isSoldOut ? "This flight is sold out" : "Select this flight"}
         >
-          선택하기 →
+          {isSoldOut ? "매진" : "선택하기 →"}
         </button>
       </div>
     </div>

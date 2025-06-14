@@ -12,15 +12,8 @@
   flex-basis: 15%;
 }
 
-/* Remove the old text style */
-/* .airline-name {
-  font-weight: 600;
-  font-size: 1.1rem;
-} */
-
-/* Add new style for the logo image */
 .airline-logo {
-  height: 20px; /* Controls the height of the logo */
+  height: 20px;
   width: auto;
   display: block;
 }
@@ -57,7 +50,6 @@
   position: relative;
 }
 
-/* Dots at the end of the duration line */
 .duration-line::before,
 .duration-line::after {
   content: "";
@@ -104,22 +96,23 @@
 }
 
 .select-button {
-  background-color: #007bff; /* Your existing button color */
+  background-color: #0d6efd;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.2s;
 }
 
 .select-button:hover {
-  background-color: #0056b3; /* Your existing hover color */
+  background-color: #0b5ed7;
 }
 
+/* This is the new style for the disabled button */
 .select-button:disabled {
-  background-color: #cccccc; /* Grey background for disabled state */
-  color: #666666; /* Darker grey text for readability */
-  cursor: not-allowed; /* Indicates the button is not clickable */
+  background-color: #6c757d;
+  cursor: not-allowed;
 }
