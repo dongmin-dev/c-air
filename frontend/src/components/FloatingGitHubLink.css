@@ -2,30 +2,50 @@
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  z-index: 1000; /* Ensures it floats above other content */
+  z-index: 1000;
 
   width: 50px;
   height: 50px;
-  background-color: #181717; /* A dark GitHub color */
+  background-color: #181717;
   color: #ffffff;
 
-  border-radius: 50%; /* Makes it a perfect circle */
+  border-radius: 50%;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
-  /* These three lines center the icon inside the circle */
   display: flex;
   align-items: center;
   justify-content: center;
 
   transition: transform 0.2s ease-in-out;
+
+  /* The incorrect 'position: relative;' has been removed. */
 }
 
-/* Style for the icon itself */
 .github-link svg {
   font-size: 1.8rem;
 }
 
-/* A subtle effect when the user hovers over the button */
 .github-link:hover {
   transform: scale(1.1);
+}
+
+.tooltip-text {
+  position: absolute;
+  right: 120%;
+
+  visibility: hidden;
+  opacity: 0;
+
+  background-color: #333;
+  color: #fff;
+  white-space: nowrap;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.github-link:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }

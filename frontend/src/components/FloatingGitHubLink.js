@@ -1,6 +1,6 @@
 import React from "react";
-import { FaGithub } from "react-icons/fa"; // Import the GitHub icon from the library
-import "./FloatingGitHubLink.css"; // We will create this next
+import { FaGithub } from "react-icons/fa";
+import "./FloatingGitHubLink.css";
 
 const FloatingGitHubLink = () => {
   return (
@@ -9,9 +9,10 @@ const FloatingGitHubLink = () => {
       target="_blank"
       rel="noopener noreferrer"
       className="github-link"
-      title="View source on GitHub"
     >
       <FaGithub />
+      {/* This span is our new custom tooltip */}
+      <span className="tooltip-text">View Source on GitHub</span>
     </a>
   );
 };
