@@ -17,6 +17,7 @@ async function searchFlights({
   seatClass,
   sortBy,
 }) {
+  // The condition filtering out sold-out flights has been removed from the WHERE clause.
   let sql = `
     SELECT
       a.AIRLINE,
@@ -40,7 +41,6 @@ async function searchFlights({
       AND a.ARRIVALAIRPORT = :arrivalAirport
       AND TRUNC(a.DEPARTUREDATETIME) = TO_DATE(:departureDate, 'YYYY-MM-DD')
       AND s.SEATCLASS = :seatClass
-      AND (s.NO_OF_SEATS - NVL(r.RESERVED_COUNT, 0)) > 0
   `;
 
   switch (sortBy) {
