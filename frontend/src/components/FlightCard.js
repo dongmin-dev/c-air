@@ -33,8 +33,22 @@ const FlightCard = ({ flight }) => {
     navigate("/book", { state: { flight: flight } });
   };
 
-  // Check if the flight is sold out
+  // --- New and Updated Logic ---
   const isSoldOut = flight.REMAINING_SEATS <= 0;
+  const hasDeparted = new Date(flight.DEPARTUREDATETIME) < new Date();
+
+  // Helper to determine the button text and title
+  const getButtonState = () => {
+    if (isSoldOut) {
+      return { text: "매진", title: "This flight is sold out" };
+    }
+    if (hasDeparted) {
+      return { text: "예약 불가", title: "This flight has already departed" };
+    }
+    return { text: "선택하기 →", title: "Select this flight" };
+  };
+
+  const buttonState = getButtonState();
 
   return (
     <div className="flight-card">
@@ -69,10 +83,10 @@ const FlightCard = ({ flight }) => {
         <button
           className="select-button"
           onClick={handleSelect}
-          disabled={isSoldOut}
-          title={isSoldOut ? "This flight is sold out" : "Select this flight"}
+          disabled={isSoldOut || hasDeparted}
+          title={buttonState.title}
         >
-          {isSoldOut ? "매진" : "선택하기 →"}
+          {buttonState.text}
         </button>
       </div>
     </div>
