@@ -9,7 +9,7 @@ const logoMap = {
   KoreanAir: koreanAirLogo,
   Asiana: asianaLogo,
   Delta: deltaLogo,
-  "British Airways": baLogo,
+  BA: baLogo,
 };
 
 /**
