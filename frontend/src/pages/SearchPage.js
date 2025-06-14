@@ -5,22 +5,10 @@ import SearchResults from "../components/SearchResults";
 import "./SearchPage.css";
 
 const SearchPage = () => {
-  const getFormattedLocalDate = () => {
-    const d = new Date();
-    // Get local date parts
-    const year = d.getFullYear();
-    const month = (d.getMonth() + 1).toString().padStart(2, "0"); // getMonth() is 0-indexed
-    const day = d.getDate().toString().padStart(2, "0");
-    const formattedDate = `${year}-${month}-${day}`;
-    // Log the date being set for debugging
-    console.log(`[SearchPage] Initializing departureDate to: ${formattedDate}`);
-    return formattedDate;
-  };
-
   const [searchParams, setSearchParams] = useState({
     departureAirport: "ICN",
     arrivalAirport: "JFK",
-    departureDate: getFormattedLocalDate(), // Use local date formatted string
+    departureDate: new Date().toISOString().split("T")[0],
     seatClass: "ECONOMY",
   });
 
@@ -29,14 +17,32 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // This function is now separate, can be called by search button OR sort change
-  const performSearch = async () => {
+  // New state to hold the list of airports
+  const [airports, setAirports] = useState([]);
+
+  // This new useEffect hook fetches the airport list when the page loads
+  useEffect(() => {
+    flightService
+      .getAirports()
+      .then((data) => {
+        setAirports(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch airports list:", err);
+      });
+  }, []); // The empty dependency array means this runs only once on mount
+
+  const executeSearch = async (params, sortValue) => {
     setIsLoading(true);
     setError("");
-    // No longer setting flights to null, so the list doesn't disappear during sort
+
+    if (flights === null) {
+      setFlights([]);
+    }
+
     try {
-      const paramsWithSort = { ...searchParams, sortBy };
-      const results = await flightService.searchFlights(paramsWithSort);
+      const query = { ...params, sortBy: sortValue };
+      const results = await flightService.searchFlights(query);
       setFlights(results);
     } catch (err) {
       setError("Failed to fetch flights. Please try again later.");
@@ -45,18 +51,15 @@ const SearchPage = () => {
     }
   };
 
-  // This effect hook re-runs the search whenever 'sortBy' changes.
-  useEffect(() => {
-    // Only run the search if flights have been loaded at least once
-    if (flights !== null) {
-      performSearch();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy]);
-
   const handleSearchButtonClick = () => {
-    setFlights(null); // Clear previous results completely for a new search
-    performSearch();
+    executeSearch(searchParams, sortBy);
+  };
+
+  const handleSortChange = (newSortValue) => {
+    setSortBy(newSortValue);
+    if (flights) {
+      executeSearch(searchParams, newSortValue);
+    }
   };
 
   return (
@@ -68,6 +71,7 @@ const SearchPage = () => {
         params={searchParams}
         setParams={setSearchParams}
         onSearch={handleSearchButtonClick}
+        airports={airports} /* Pass the airport list to the form */
       />
 
       {flights !== null && (
@@ -77,7 +81,7 @@ const SearchPage = () => {
           error={error}
           searchParams={searchParams}
           sortBy={sortBy}
-          onSortChange={setSortBy}
+          onSortChange={handleSortChange}
         />
       )}
     </div>
