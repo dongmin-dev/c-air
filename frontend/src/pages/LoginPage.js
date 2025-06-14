@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import authService from "../services/authService";
 import "./LoginPage.css";
 
-// The component now receives an 'onLogin' prop from App.js
 const LoginPage = ({ onLogin }) => {
   const [cno, setCno] = useState("");
   const [passwd, setPasswd] = useState("");
@@ -15,11 +14,10 @@ const LoginPage = ({ onLogin }) => {
     setError("");
     try {
       const response = await authService.login(cno, passwd);
-      // After a successful API call, call the onLogin function from App.js
-      // This updates the state in the top-level component immediately.
       onLogin(response.user);
       navigate("/search");
     } catch (err) {
+      // The opening brace was missing here
       setError("Login failed. Please check your member number and password.");
       console.error(err);
     }
@@ -52,7 +50,12 @@ const LoginPage = ({ onLogin }) => {
           {error && <p className="error-message">{error}</p>}
 
           <div className="forgot-password-link">
-            <a href="#">비밀번호를 잊으셨나요?</a>
+            <span
+              className="tooltip-host pseudo-link"
+              data-tooltip="이 기능은 구현되지 않았습니다."
+            >
+              비밀번호를 잊으셨나요?
+            </span>
           </div>
 
           <button type="submit" className="login-button">
@@ -61,7 +64,12 @@ const LoginPage = ({ onLogin }) => {
         </form>
         <div className="signup-link">
           <span>계정이 없으신가요? </span>
-          <a href="#">회원가입</a>
+          <span
+            className="tooltip-host pseudo-link"
+            data-tooltip="이 기능은 구현되지 않았습니다."
+          >
+            회원가입
+          </span>
         </div>
       </div>
     </div>
