@@ -6,7 +6,23 @@ C-Air is a database term project developed during my junior year at Chungnam Nat
 
 ## Features
 
-- Features will be added in future updates.
+- Login page for user authentication (registration and search for password are not implemented)  
+   <img src="assets/login.png" alt="Login Page" width="500px">
+
+- Flight search functionality  
+   <img src="assets/search.png" alt="Flight Search" width="500px">
+
+- Booking confirmation page  
+   <img src="assets/book.png" alt="Booking Confirmation" width="500px">
+
+- Booking cancellation page  
+   <img src="assets/cancel.png" alt="Booking Cancellation" width="500px">
+
+- Booking / Cancellation history page  
+   <img src="assets/history.png" alt="Booking History" width="500px">
+
+- Admin page for viewing system statistics  
+   <img src="assets/admin-stats.png" alt="Admin Page" width="500px">
 
 ## Installation
 
@@ -20,6 +36,23 @@ C-Air is a database term project developed during my junior year at Chungnam Nat
 
    ```bash
    cd c-air
+   ```
+
+   a. For frontend:
+
+   ```bash
+   cd frontend
+   npm install
+   npm run build
+   serve -s build
+   ```
+
+   b. For backend:
+
+   ```bash
+   cd backend
+   npm install
+   npm run dev
    ```
 
 ## Contributing
