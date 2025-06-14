@@ -17,10 +17,8 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // New state to hold the list of airports
   const [airports, setAirports] = useState([]);
 
-  // This new useEffect hook fetches the airport list when the page loads
   useEffect(() => {
     flightService
       .getAirports()
@@ -30,7 +28,7 @@ const SearchPage = () => {
       .catch((err) => {
         console.error("Failed to fetch airports list:", err);
       });
-  }, []); // The empty dependency array means this runs only once on mount
+  }, []);
 
   const executeSearch = async (params, sortValue) => {
     setIsLoading(true);
@@ -62,6 +60,21 @@ const SearchPage = () => {
     }
   };
 
+  // This new function handles changing the date by one day
+  const handleDateArrowClick = (daysToAdd) => {
+    const currentDate = new Date(searchParams.departureDate);
+    // Set time to noon to avoid timezone-related day shifts
+    currentDate.setUTCHours(12);
+    currentDate.setDate(currentDate.getDate() + daysToAdd);
+
+    const newDate = currentDate.toISOString().split("T")[0];
+    const newParams = { ...searchParams, departureDate: newDate };
+
+    // Update the state and execute a new search
+    setSearchParams(newParams);
+    executeSearch(newParams, sortBy);
+  };
+
   return (
     <div className="search-page">
       <div className="search-page-title-container">
@@ -71,7 +84,7 @@ const SearchPage = () => {
         params={searchParams}
         setParams={setSearchParams}
         onSearch={handleSearchButtonClick}
-        airports={airports} /* Pass the airport list to the form */
+        airports={airports}
       />
 
       {flights !== null && (
@@ -82,6 +95,7 @@ const SearchPage = () => {
           searchParams={searchParams}
           sortBy={sortBy}
           onSortChange={handleSortChange}
+          onDateChange={handleDateArrowClick} // Pass the new handler down
         />
       )}
     </div>
