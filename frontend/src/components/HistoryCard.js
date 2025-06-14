@@ -1,8 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./HistoryCard.css";
-import koreanAirLogo from "../koreanair.png";
+import { getAirlineLogo } from "../services/logoService"; // Import the new logo service function
 
+// Helper function to format currency
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat("ko-KR", {
     style: "currency",
@@ -13,7 +14,6 @@ const formatCurrency = (amount) => {
 const HistoryCard = ({ item, type }) => {
   const navigate = useNavigate();
 
-  // Determine which date and amount to display based on the type of history
   const displayDate =
     type === "booking"
       ? new Date(item.RESERVEDATETIME)
@@ -29,7 +29,12 @@ const HistoryCard = ({ item, type }) => {
   return (
     <div className="history-card">
       <div className="history-card-left">
-        <img src={koreanAirLogo} alt={item.AIRLINE} className="airline-logo" />
+        {/* Use the new function to get the correct logo */}
+        <img
+          src={getAirlineLogo(item.AIRLINE)}
+          alt={item.AIRLINE}
+          className="airline-logo"
+        />
       </div>
       <div className="history-card-center">
         <p className="route">
@@ -57,7 +62,6 @@ const HistoryCard = ({ item, type }) => {
           {" · "}
           {item.SEATCLASS}
         </p>
-        {/* This is the new element for the event time */}
         <p className="event-time">
           {type === "booking" ? "예약 시간" : "취소 시간"}:{" "}
           {displayDate.toLocaleString("ko-KR")}
